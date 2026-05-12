@@ -3,38 +3,252 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Museu Virtual – São Paulo: História & Turismo</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet">
+<title>Museu Virtual Imersivo – São Paulo: História & Turismo | Experiência Interativa</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@200;300;400;500;600;700&family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
+/* ═══════════════════════════════════════════════
+   MUSEU VIRTUAL IMERSIVO DE SÃO PAULO
+   DESIGN SYSTEM COMPLETO - 2024
+   ═══════════════════════════════════════════════ */
+
 :root {
+  /* Paleta Principal */
   --gold: #C9A84C;
   --gold-light: #E8C97A;
-  --dark: #0D0D0D;
-  --darker: #060608;
+  --gold-dark: #A68A3A;
+  --gold-glow: rgba(201,168,76,0.6);
+  
+  --dark: #0A0A0C;
+  --darker: #050508;
+  --dark-blue: #0D1525;
+  --dark-purple: #100D1F;
+  
   --cream: #F5EFE0;
-  --cream-dark: #DDD4BC;
+  --cream-dark: #C4B99A;
+  --cream-light: #FFF8EC;
+  
   --red: #C0392B;
-  --green: #2E7D52;
-  --blue: #1A3A5C;
+  --red-light: #E74C3C;
+  --green: #27AE60;
+  --green-light: #2ECC71;
+  --blue: #2980B9;
+  --purple: #8E44AD;
+  --orange: #E67E22;
+  
+  /* Salas */
   --room1: #1A3A5C;
-  --room2: #2E7D52;
-  --room3: #7B2D8B;
-  --room4: #C0392B;
+  --room2: #1A5C3A;
+  --room3: #5C1A6B;
+  --room4: #8B1A1A;
   --room5: #8B4513;
-  --room6: #1A6B4A;
+  --room6: #1A5C4A;
+  
+  /* Sombras e Efeitos */
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+  --shadow-md: 0 8px 32px rgba(0,0,0,0.4);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,0.5);
+  --shadow-gold: 0 4px 20px rgba(201,168,76,0.3);
+  --shadow-red: 0 4px 20px rgba(192,57,43,0.3);
+  --shadow-green: 0 4px 20px rgba(39,174,96,0.3);
+  
+  /* Transições */
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-in-out-cubic: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  
+  /* Fontes */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'DM Sans', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-accent: 'Bebas Neue', sans-serif;
+  --font-elegant: 'Cormorant Garamond', serif;
 }
 
-* { margin:0; padding:0; box-sizing:border-box; }
+/* ═══════════════════════════════════════════════
+   RESET E BASE
+   ═══════════════════════════════════════════════ */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
 body {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   background: var(--darker);
   color: var(--cream);
   overflow-x: hidden;
   cursor: default;
+  line-height: 1.6;
+  min-height: 100vh;
+  position: relative;
 }
 
-/* ── ENTRANCE ── */
+/* ═══════════════════════════════════════════════
+   CURSOR PERSONALIZADO
+   ═══════════════════════════════════════════════ */
+.cursor {
+  width: 12px; height: 12px;
+  background: var(--gold);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 99999;
+  mix-blend-mode: difference;
+  transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease;
+  transform: translate(-50%, -50%);
+}
+
+.cursor-follower {
+  width: 40px; height: 40px;
+  border: 1.5px solid rgba(201,168,76,0.5);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 99998;
+  transition: all 0.3s ease;
+  transform: translate(-50%, -50%);
+}
+
+.cursor-hover {
+  width: 50px; height: 50px;
+  background: rgba(201,168,76,0.2);
+  border-color: var(--gold);
+  mix-blend-mode: normal;
+}
+
+/* ═══════════════════════════════════════════════
+   PARTÍCULAS DE FUNDO
+   ═══════════════════════════════════════════════ */
+#particles-container {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.particle {
+  position: absolute;
+  background: var(--gold);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: floatUp linear infinite;
+  opacity: 0;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(100vh) scale(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.2;
+  }
+  100% {
+    transform: translateY(-10vh) scale(1);
+    opacity: 0;
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   SCROLLBAR ESTILIZADA
+   ═══════════════════════════════════════════════ */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--darker);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--gold-dark), var(--gold));
+  border-radius: 4px;
+  border: 1px solid var(--darker);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--gold), var(--gold-light));
+}
+
+/* ═══════════════════════════════════════════════
+   CARREGAMENTO INICIAL (SPLASH SCREEN)
+   ═══════════════════════════════════════════════ */
+#splash-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: var(--darker);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transition: all 0.8s var(--ease-out-expo);
+}
+
+#splash-screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(1.1);
+}
+
+.splash-logo {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 4rem);
+  color: var(--gold);
+  text-align: center;
+  animation: logoReveal 1.2s var(--ease-out-expo);
+}
+
+@keyframes logoReveal {
+  0% {
+    letter-spacing: 2em;
+    opacity: 0;
+    filter: blur(20px);
+  }
+  100% {
+    letter-spacing: 0.15em;
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+.splash-loader {
+  width: 200px;
+  height: 2px;
+  background: rgba(255,255,255,0.1);
+  margin-top: 2rem;
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.splash-loader-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--gold);
+  border-radius: 1px;
+  transition: width 2s var(--ease-out-expo);
+}
+
+.splash-loader-bar.loaded {
+  width: 100%;
+}
+
+/* ═══════════════════════════════════════════════
+   ENTRADA PRINCIPAL
+   ═══════════════════════════════════════════════ */
 #entrance {
   min-height: 100vh;
   display: flex;
@@ -42,312 +256,769 @@ body {
   align-items: center;
   justify-content: center;
   position: relative;
-  background: radial-gradient(ellipse at 50% 30%, #1a2a4a 0%, #060608 70%);
+  background: radial-gradient(ellipse at 50% 30%, #1a2a4a 0%, #0a0a14 60%, #050508 100%);
   text-align: center;
   padding: 2rem;
   overflow: hidden;
 }
 
 #entrance::before {
-  content:'';
-  position:absolute; inset:0;
-  background: repeating-linear-gradient(
-    0deg, transparent, transparent 40px,
-    rgba(201,168,76,0.04) 40px, rgba(201,168,76,0.04) 41px
-  ),
-  repeating-linear-gradient(
-    90deg, transparent, transparent 40px,
-    rgba(201,168,76,0.04) 40px, rgba(201,168,76,0.04) 41px
-  );
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(201,168,76,0.03) 40px, rgba(201,168,76,0.03) 41px),
+    repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(201,168,76,0.03) 40px, rgba(201,168,76,0.03) 41px);
+  animation: gridShift 20s linear infinite;
+  z-index: 0;
+}
+
+@keyframes gridShift {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(40px, 40px); }
+}
+
+#entrance::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px; height: 800px;
+  background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
+  animation: entranceGlow 4s ease-in-out infinite alternate;
+  z-index: 0;
+}
+
+@keyframes entranceGlow {
+  0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.5; }
+  100% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+}
+
+.entrance-content {
+  position: relative;
+  z-index: 1;
 }
 
 .entrance-badge {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: var(--font-accent);
   font-size: 0.85rem;
   letter-spacing: 0.4em;
   color: var(--gold);
   border: 1px solid rgba(201,168,76,0.4);
-  padding: 0.4rem 1.2rem;
+  padding: 0.5rem 1.5rem;
   margin-bottom: 2rem;
-  animation: fadeDown 1s ease both;
+  display: inline-block;
+  animation: fadeSlideDown 1s var(--ease-out-expo) both;
+  position: relative;
+  overflow: hidden;
+}
+
+.entrance-badge::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  animation: badgeShine 3s ease-in-out infinite;
+}
+
+@keyframes badgeShine {
+  0%, 100% { left: -100%; }
+  50% { left: 100%; }
 }
 
 .entrance-title {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(2.8rem, 8vw, 6rem);
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 10vw, 7rem);
   font-weight: 900;
   line-height: 1.05;
   color: var(--cream);
-  animation: fadeDown 1s 0.2s ease both;
+  animation: fadeSlideDown 1s 0.2s var(--ease-out-expo) both;
+  text-shadow: 0 0 80px rgba(201,168,76,0.3);
 }
 
-.entrance-title span { color: var(--gold); }
+.entrance-title span {
+  color: var(--gold);
+  position: relative;
+  display: inline-block;
+}
+
+.entrance-title span::after {
+  content: '';
+  position: absolute;
+  bottom: -5px; left: 0;
+  width: 100%; height: 2px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: underlineReveal 0.8s 1.5s var(--ease-out-expo) forwards;
+}
+
+@keyframes underlineReveal {
+  to { transform: scaleX(1); }
+}
 
 .entrance-subtitle {
-  font-size: clamp(0.95rem, 2vw, 1.15rem);
+  font-size: clamp(1rem, 2vw, 1.2rem);
   color: var(--cream-dark);
-  max-width: 560px;
+  max-width: 600px;
   margin: 1.5rem auto 0.5rem;
-  line-height: 1.7;
-  animation: fadeDown 1s 0.4s ease both;
+  line-height: 1.8;
+  animation: fadeSlideDown 1s 0.4s var(--ease-out-expo) both;
+  font-weight: 300;
 }
 
 .central-question {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-elegant);
   font-style: italic;
-  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
   color: var(--gold-light);
-  background: rgba(201,168,76,0.08);
+  background: rgba(201,168,76,0.06);
+  border: 1px solid rgba(201,168,76,0.15);
   border-left: 3px solid var(--gold);
-  padding: 1rem 1.5rem;
-  max-width: 600px;
-  margin: 1.5rem auto;
-  animation: fadeDown 1s 0.6s ease both;
+  padding: 1.2rem 1.8rem;
+  max-width: 650px;
+  margin: 2rem auto;
+  animation: fadeSlideDown 1s 0.6s var(--ease-out-expo) both;
+  position: relative;
+  backdrop-filter: blur(5px);
+}
+
+.central-question::before {
+  content: '"';
+  position: absolute;
+  top: -20px; left: 15px;
+  font-size: 4rem;
+  color: var(--gold);
+  opacity: 0.3;
+  font-family: var(--font-display);
 }
 
 .enter-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.7rem;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.1rem;
+  gap: 0.8rem;
+  font-family: var(--font-accent);
+  font-size: 1.2rem;
   letter-spacing: 0.2em;
   color: var(--dark);
-  background: var(--gold);
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
   border: none;
-  padding: 1rem 2.5rem;
+  padding: 1.2rem 3rem;
   cursor: pointer;
-  margin-top: 2rem;
-  transition: all 0.3s;
-  animation: fadeDown 1s 0.8s ease both;
+  margin-top: 2.5rem;
+  transition: all 0.4s var(--ease-out-expo);
+  animation: fadeSlideDown 1s 0.8s var(--ease-out-expo) both;
   position: relative;
   overflow: hidden;
+  border-radius: 2px;
+  box-shadow: 0 8px 32px rgba(201,168,76,0.3);
+  font-weight: 600;
 }
 
-.enter-btn::after {
-  content:'';
-  position:absolute; inset:0;
-  background: rgba(255,255,255,0.2);
-  transform: translateX(-100%);
+.enter-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 48px rgba(201,168,76,0.5);
+  letter-spacing: 0.25em;
+}
+
+.enter-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.6s;
+}
+
+.enter-btn:hover::before {
+  left: 100%;
+}
+
+.enter-btn-icon {
+  font-size: 1.4rem;
   transition: transform 0.3s;
 }
-.enter-btn:hover::after { transform: translateX(0); }
-.enter-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(201,168,76,0.4); }
 
-/* ── MUSEUM LAYOUT ── */
-#museum { display: none; }
+.enter-btn:hover .enter-btn-icon {
+  transform: translateX(5px);
+}
+
+/* ═══════════════════════════════════════════════
+   ANIMAÇÕES DE ENTRADA
+   ═══════════════════════════════════════════════ */
+@keyframes fadeSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+    filter: blur(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   MUSEUM LAYOUT
+   ═══════════════════════════════════════════════ */
+#museum {
+  display: none;
+  position: relative;
+  z-index: 1;
+}
 
 .museum-header {
-  position: fixed; top:0; left:0; right:0;
-  z-index: 100;
-  background: rgba(6,6,8,0.95);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(201,168,76,0.2);
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  background: rgba(10,10,12,0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(201,168,76,0.15);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0.8rem 2rem;
+  transition: all 0.3s;
+}
+
+.museum-header.scrolled {
+  box-shadow: 0 4px 30px rgba(0,0,0,0.5);
 }
 
 .museum-logo {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 1.1rem;
   color: var(--gold);
   font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s;
 }
 
-.room-nav {
+.museum-logo:hover {
+  color: var(--gold-light);
+  transform: scale(1.02);
+}
+
+.museum-logo-icon {
+  font-size: 1.5rem;
+  animation: logoBounce 2s ease-in-out infinite;
+}
+
+@keyframes logoBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.room-nav-desktop {
   display: flex;
-  gap: 0.3rem;
+  gap: 0.2rem;
   flex-wrap: wrap;
   justify-content: center;
 }
 
+@media (max-width: 900px) {
+  .room-nav-desktop {
+    display: none;
+  }
+}
+
 .nav-btn {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-size: 0.7rem;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0.05em;
-  padding: 0.35rem 0.8rem;
-  border: 1px solid rgba(201,168,76,0.3);
+  padding: 0.4rem 0.9rem;
+  border: 1px solid rgba(201,168,76,0.2);
   background: transparent;
   color: var(--cream-dark);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s var(--ease-out-expo);
   border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-btn::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 50%;
+  width: 0; height: 2px;
+  background: var(--gold);
+  transition: all 0.3s var(--ease-out-expo);
+  transform: translateX(-50%);
+}
+
+.nav-btn:hover::before {
+  width: 80%;
 }
 
 .nav-btn:hover, .nav-btn.active {
   background: var(--gold);
   color: var(--dark);
   border-color: var(--gold);
+  box-shadow: 0 4px 15px rgba(201,168,76,0.4);
+}
+
+.nav-btn.active::before {
+  width: 0;
 }
 
 .home-btn {
   font-size: 0.75rem;
   color: var(--gold);
   background: transparent;
-  border: 1px solid rgba(201,168,76,0.4);
-  padding: 0.35rem 0.8rem;
+  border: 1px solid rgba(201,168,76,0.3);
+  padding: 0.4rem 1rem;
   cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 600;
-  transition: all 0.2s;
+  font-family: var(--font-body);
+  font-weight: 500;
+  transition: all 0.3s;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
 }
-.home-btn:hover { background: rgba(201,168,76,0.15); }
 
-/* ── ROOMS ── */
+.home-btn:hover {
+  background: rgba(201,168,76,0.1);
+  border-color: var(--gold);
+  box-shadow: 0 0 20px rgba(201,168,76,0.15);
+}
+
+/* ═══════════════════════════════════════════════
+   MOBILE NAV
+   ═══════════════════════════════════════════════ */
+.mobile-nav-toggle {
+  display: none;
+  background: transparent;
+  border: 1px solid rgba(201,168,76,0.3);
+  color: var(--gold);
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  font-size: 1.2rem;
+  border-radius: 2px;
+}
+
+@media (max-width: 900px) {
+  .mobile-nav-toggle {
+    display: block;
+  }
+}
+
+.mobile-nav-menu {
+  display: none;
+  position: fixed;
+  top: 60px; left: 0; right: 0;
+  background: rgba(10,10,12,0.98);
+  backdrop-filter: blur(30px);
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+  padding: 1rem;
+  z-index: 999;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.mobile-nav-menu.open {
+  display: flex;
+}
+
+/* ═══════════════════════════════════════════════
+   PROGRESS BAR
+   ═══════════════════════════════════════════════ */
+.progress-bar-outer {
+  position: fixed;
+  top: 60px; left: 0; right: 0;
+  height: 3px;
+  background: rgba(255,255,255,0.03);
+  z-index: 999;
+}
+
+.progress-bar-inner {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light));
+  transition: width 0.6s var(--ease-out-expo);
+  border-radius: 0 2px 2px 0;
+  box-shadow: 0 0 10px var(--gold-glow);
+}
+
+/* ═══════════════════════════════════════════════
+   ROOMS
+   ═══════════════════════════════════════════════ */
 .room {
   display: none;
   min-height: 100vh;
-  padding-top: 70px;
+  padding-top: 60px;
+  animation: roomFadeIn 0.6s var(--ease-out-expo);
 }
-.room.active { display: block; }
 
-/* ── ROOM HERO ── */
+.room.active {
+  display: block;
+}
+
+@keyframes roomFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   ROOM HERO
+   ═══════════════════════════════════════════════ */
 .room-hero {
   position: relative;
-  height: 45vh;
-  min-height: 280px;
+  height: 50vh;
+  min-height: 350px;
   display: flex;
   align-items: flex-end;
-  padding: 2.5rem;
+  padding: 3rem;
   overflow: hidden;
 }
 
 .room-hero-bg {
-  position: absolute; inset:0;
-  z-index:0;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
 }
 
-.room-hero::after {
-  content:'';
-  position:absolute; inset:0;
-  background: linear-gradient(to top, rgba(6,6,8,0.95) 0%, rgba(6,6,8,0.3) 100%);
-  z-index:1;
+.room-hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse at 30% 50%, rgba(201,168,76,0.08) 0%, transparent 70%),
+    linear-gradient(to top, rgba(5,5,8,0.95) 0%, rgba(5,5,8,0.4) 60%, rgba(5,5,8,0.2) 100%);
+  z-index: 1;
 }
 
-.room-hero-content { position:relative; z-index:2; }
+.room-hero-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.hero-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--gold);
+  animation: heroParticleFloat linear infinite;
+  opacity: 0;
+}
+
+@keyframes heroParticleFloat {
+  0% {
+    transform: translateY(0) translateX(0) scale(0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.6;
+  }
+  80% {
+    opacity: 0.2;
+  }
+  100% {
+    transform: translateY(-300px) translateX(100px) scale(1.5);
+    opacity: 0;
+  }
+}
+
+.room-hero-content {
+  position: relative;
+  z-index: 2;
+}
 
 .room-number {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 0.85rem;
-  letter-spacing: 0.35em;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.3em;
   color: var(--gold);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.room-number::after {
+  content: '';
+  width: 30px;
+  height: 1px;
+  background: var(--gold);
 }
 
 .room-title {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
   font-weight: 900;
   line-height: 1.1;
   color: var(--cream);
+  text-shadow: 0 4px 30px rgba(0,0,0,0.5);
 }
 
-.room-title span { color: var(--gold); }
+.room-title span {
+  color: var(--gold);
+}
 
-/* ── CONTENT AREA ── */
+.room-deco {
+  position: absolute;
+  right: 2rem;
+  bottom: 1rem;
+  font-size: 8rem;
+  opacity: 0.04;
+  z-index: 1;
+  line-height: 1;
+  animation: decoFloat 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes decoFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  33% { transform: translateY(-10px) rotate(2deg); }
+  66% { transform: translateY(5px) rotate(-2deg); }
+}
+
+/* Room Hero Themes */
+.room-1 .room-hero-bg { 
+  background: linear-gradient(135deg, #0D1F3C 0%, #1A3A5C 40%, #0D2540 70%, #0A1525 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+.room-2 .room-hero-bg { 
+  background: linear-gradient(135deg, #0D2A1A 0%, #1A5C3A 40%, #0D3520 70%, #0A1A10 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 18s ease infinite;
+}
+.room-3 .room-hero-bg { 
+  background: linear-gradient(135deg, #1A0D2A 0%, #3A1A5C 40%, #250D40 70%, #150A25 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 12s ease infinite;
+}
+.room-4 .room-hero-bg { 
+  background: linear-gradient(135deg, #2A0D0D 0%, #5C1A1A 40%, #401010 70%, #250A0A 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 14s ease infinite;
+}
+.room-5 .room-hero-bg { 
+  background: linear-gradient(135deg, #2A150D 0%, #5C2A1A 40%, #401F10 70%, #25100A 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 16s ease infinite;
+}
+.room-6 .room-hero-bg { 
+  background: linear-gradient(135deg, #0D2A1A 0%, #1A5C3A 40%, #0D4025 70%, #0A2515 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 20s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* ═══════════════════════════════════════════════
+   CONTENT AREA
+   ═══════════════════════════════════════════════ */
 .room-content {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 3rem 2rem;
+  padding: 3rem 2rem 5rem;
+}
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.35em;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+  opacity: 0.8;
+  text-transform: uppercase;
+}
+
+.section-heading {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  color: var(--cream);
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.divider {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  margin-bottom: 2rem;
+}
+
+.lead-text {
+  font-size: 1.05rem;
+  line-height: 1.9;
+  color: var(--cream-dark);
+  max-width: 800px;
+  margin-bottom: 2rem;
+  font-weight: 300;
 }
 
 .section-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
   margin: 2rem 0;
 }
 
+/* ═══════════════════════════════════════════════
+   INFO CARDS
+   ═══════════════════════════════════════════════ */
 .info-card {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(201,168,76,0.15);
-  padding: 1.8rem;
-  border-radius: 4px;
-  transition: all 0.3s;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(201,168,76,0.1);
+  padding: 2rem;
+  border-radius: 6px;
+  transition: all 0.4s var(--ease-out-expo);
   position: relative;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .info-card::before {
-  content:'';
-  position:absolute;
-  top:0; left:0; right:0; height:3px;
-  background: var(--gold);
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.3s;
+  transition: transform 0.5s var(--ease-out-expo);
 }
 
-.info-card:hover::before { transform: scaleX(1); }
-.info-card:hover { background: rgba(255,255,255,0.07); transform: translateY(-3px); }
+.info-card:hover::before {
+  transform: scaleX(1);
+}
+
+.info-card:hover {
+  background: rgba(255,255,255,0.06);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  border-color: rgba(201,168,76,0.3);
+}
 
 .info-card h3 {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 1.2rem;
   color: var(--gold);
   margin-bottom: 0.8rem;
 }
 
 .info-card p, .info-card li {
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   line-height: 1.7;
   color: var(--cream-dark);
 }
 
-.info-card ul { padding-left: 1.2rem; }
-.info-card li { margin-bottom: 0.4rem; }
-
-.lead-text {
-  font-size: 1.05rem;
-  line-height: 1.8;
-  color: var(--cream-dark);
-  max-width: 750px;
-  margin-bottom: 2rem;
+.info-card ul {
+  padding-left: 1.2rem;
 }
 
-/* ── TIMELINE ── */
+.info-card li {
+  margin-bottom: 0.4rem;
+}
+
+/* ═══════════════════════════════════════════════
+   TIMELINE AVANÇADA
+   ═══════════════════════════════════════════════ */
 .timeline {
   position: relative;
-  padding: 1rem 0 1rem 2.5rem;
+  padding: 2rem 0 2rem 3rem;
   margin: 2rem 0;
 }
 
 .timeline::before {
-  content:'';
-  position:absolute;
-  left: 0.55rem; top:0; bottom:0;
+  content: '';
+  position: absolute;
+  left: 0.7rem;
+  top: 0;
+  bottom: 0;
   width: 2px;
-  background: linear-gradient(to bottom, var(--gold), transparent);
+  background: linear-gradient(to bottom, var(--gold), transparent 80%);
+  animation: timelineGrow 2s var(--ease-out-expo);
+}
+
+@keyframes timelineGrow {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
 }
 
 .timeline-item {
   position: relative;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: all 0.3s var(--ease-out-expo);
+  padding: 0.5rem 0;
 }
 
-.timeline-item:hover { transform: translateX(5px); }
+.timeline-item:hover {
+  transform: translateX(8px);
+}
 
 .timeline-item::before {
-  content:'';
-  position:absolute;
-  left: -2rem; top:0.35rem;
-  width: 10px; height:10px;
+  content: '';
+  position: absolute;
+  left: -2.65rem;
+  top: 0.6rem;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background: var(--gold);
-  border: 2px solid var(--dark);
-  box-shadow: 0 0 0 3px rgba(201,168,76,0.3);
+  border: 3px solid var(--darker);
+  box-shadow: 0 0 0 4px rgba(201,168,76,0.25);
+  transition: all 0.3s var(--ease-out-expo);
+}
+
+.timeline-item.open::before {
+  box-shadow: 0 0 0 8px rgba(201,168,76,0.4);
+  background: var(--gold-light);
+  transform: scale(1.2);
 }
 
 .timeline-year {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.3rem;
+  font-family: var(--font-mono);
+  font-size: 1.2rem;
   color: var(--gold);
   letter-spacing: 0.1em;
+  font-weight: 500;
 }
 
 .timeline-desc {
@@ -358,30 +1029,49 @@ body {
 }
 
 .timeline-extra {
-  display: none;
-  background: rgba(201,168,76,0.08);
+  max-height: 0;
+  overflow: hidden;
+  background: rgba(201,168,76,0.04);
   border-left: 2px solid var(--gold);
-  padding: 0.8rem;
-  margin-top: 0.5rem;
+  margin-top: 0.8rem;
   font-size: 0.85rem;
   color: var(--cream-dark);
-  line-height: 1.6;
+  line-height: 1.7;
+  transition: max-height 0.5s var(--ease-out-expo), padding 0.5s, margin 0.5s;
+  border-radius: 0 4px 4px 0;
 }
 
-.timeline-item.open .timeline-extra { display: block; }
+.timeline-item.open .timeline-extra {
+  max-height: 300px;
+  padding: 1rem;
+  margin-top: 0.8rem;
+}
 
-/* ── INTERACTIVE MAP ── */
+/* ═══════════════════════════════════════════════
+   MAPA INTERATIVO AVANÇADO
+   ═══════════════════════════════════════════════ */
 .map-container {
-  background: rgba(26,58,92,0.3);
-  border: 1px solid rgba(201,168,76,0.2);
-  border-radius: 6px;
-  padding: 2rem;
+  background: rgba(26,58,92,0.2);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 8px;
+  padding: 2.5rem;
   margin: 2rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.map-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 30% 40%, rgba(201,168,76,0.05) 0%, transparent 50%);
+  pointer-events: none;
 }
 
 .map-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.3rem;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
   color: var(--gold);
   margin-bottom: 1.5rem;
   text-align: center;
@@ -389,152 +1079,216 @@ body {
 
 .map-svg-wrap {
   position: relative;
-  max-width: 680px;
+  max-width: 700px;
   margin: 0 auto;
 }
 
-.map-svg-wrap svg { width:100%; height:auto; display:block; }
+.map-svg-wrap svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.5));
+}
 
 .map-point {
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: all 0.3s var(--ease-spring);
   transform-origin: center;
 }
 
-.map-point:hover { transform: scale(1.3); }
+.map-point:hover {
+  transform: scale(1.4);
+}
 
 .map-point circle {
   fill: var(--gold);
   stroke: var(--dark);
   stroke-width: 2;
-  filter: drop-shadow(0 0 6px rgba(201,168,76,0.7));
-  animation: pulse 2s infinite;
+  filter: drop-shadow(0 0 8px rgba(201,168,76,0.8));
+  animation: mapPulse 2.5s ease-in-out infinite;
 }
 
-@keyframes pulse {
-  0%,100% { r:8px; opacity:1; }
-  50% { r:10px; opacity:0.85; }
+@keyframes mapPulse {
+  0%, 100% { r: 8px; filter: drop-shadow(0 0 8px rgba(201,168,76,0.6)); }
+  50% { r: 11px; filter: drop-shadow(0 0 16px rgba(201,168,76,0.9)); }
 }
 
 .map-info {
-  background: rgba(6,6,8,0.95);
+  background: rgba(10,10,12,0.95);
   border: 1px solid var(--gold);
-  border-radius: 4px;
-  padding: 1.2rem 1.5rem;
+  border-radius: 6px;
+  padding: 1.5rem;
   margin-top: 1.5rem;
-  min-height: 90px;
-  transition: all 0.3s;
+  min-height: 100px;
+  transition: all 0.4s var(--ease-out-expo);
+  backdrop-filter: blur(10px);
 }
 
 .map-info h4 {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   color: var(--gold);
   font-size: 1.1rem;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.5rem;
 }
 
-.map-info p { font-size: 0.9rem; color: var(--cream-dark); line-height:1.6; }
+.map-info p {
+  font-size: 0.9rem;
+  color: var(--cream-dark);
+  line-height: 1.7;
+}
 
 .map-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.8rem;
-  margin-top: 1rem;
+  gap: 0.6rem;
+  margin-top: 1.2rem;
   justify-content: center;
 }
 
 .legend-item {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.5rem;
   font-size: 0.78rem;
   color: var(--cream-dark);
   cursor: pointer;
-  padding: 0.3rem 0.7rem;
-  border: 1px solid rgba(201,168,76,0.2);
-  border-radius: 20px;
-  transition: all 0.2s;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 30px;
+  transition: all 0.3s var(--ease-out-expo);
+  font-weight: 500;
 }
 
 .legend-item:hover {
   background: rgba(201,168,76,0.1);
   border-color: var(--gold);
   color: var(--gold);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
 .legend-dot {
-  width: 8px; height: 8px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: var(--gold);
+  box-shadow: 0 0 6px var(--gold-glow);
 }
 
-/* ── CULTURE CARDS ── */
+/* ═══════════════════════════════════════════════
+   CULTURE GRID
+   ═══════════════════════════════════════════════ */
 .culture-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.2rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
   margin: 2rem 0;
 }
 
 .culture-card {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(201,168,76,0.15);
-  padding: 1.5rem;
-  border-radius: 4px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(201,168,76,0.08);
+  padding: 1.8rem;
+  border-radius: 6px;
   text-align: center;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.4s var(--ease-out-expo);
+  position: relative;
+  overflow: hidden;
+}
+
+.culture-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(201,168,76,0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.culture-card:hover::after {
+  opacity: 1;
 }
 
 .culture-card:hover {
-  background: rgba(201,168,76,0.1);
+  background: rgba(201,168,76,0.08);
   border-color: var(--gold);
-  transform: translateY(-4px);
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.4);
 }
 
-.culture-icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
+.culture-icon {
+  font-size: 2.8rem;
+  margin-bottom: 0.8rem;
+  transition: transform 0.3s var(--ease-spring);
+  position: relative;
+  z-index: 1;
+}
+
+.culture-card:hover .culture-icon {
+  transform: scale(1.2) rotate(5deg);
+}
 
 .culture-card h3 {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   color: var(--gold);
   font-size: 1rem;
   margin-bottom: 0.5rem;
+  position: relative;
+  z-index: 1;
 }
 
-.culture-card p { font-size: 0.82rem; color: var(--cream-dark); line-height:1.6; }
-
-.culture-detail {
-  display: none;
-  background: rgba(201,168,76,0.07);
-  border-top: 1px solid rgba(201,168,76,0.2);
-  margin-top: 0.8rem;
-  padding-top: 0.8rem;
-  font-size: 0.82rem;
+.culture-card p {
+  font-size: 0.8rem;
   color: var(--cream-dark);
   line-height: 1.6;
-  text-align: left;
+  position: relative;
+  z-index: 1;
 }
 
-.culture-card.open .culture-detail { display: block; }
+.culture-detail {
+  max-height: 0;
+  overflow: hidden;
+  border-top: 1px solid rgba(201,168,76,0.1);
+  margin-top: 0.8rem;
+  padding-top: 0;
+  font-size: 0.8rem;
+  color: var(--cream-dark);
+  line-height: 1.7;
+  text-align: left;
+  transition: max-height 0.5s var(--ease-out-expo), padding 0.5s, margin 0.5s;
+  position: relative;
+  z-index: 1;
+}
 
-/* ── IMPACT METER ── */
+.culture-card.open .culture-detail {
+  max-height: 500px;
+  padding-top: 0.8rem;
+}
+
+/* ═══════════════════════════════════════════════
+   IMPACT METER
+   ═══════════════════════════════════════════════ */
 .impact-section {
-  background: rgba(192,57,43,0.08);
-  border: 1px solid rgba(192,57,43,0.2);
-  border-radius: 6px;
-  padding: 2rem;
+  background: rgba(192,57,43,0.05);
+  border: 1px solid rgba(192,57,43,0.15);
+  border-radius: 8px;
+  padding: 2.5rem;
   margin: 2rem 0;
 }
 
 .impact-title {
-  font-family: 'Playfair Display', serif;
-  color: #E74C3C;
+  font-family: var(--font-display);
+  color: var(--red-light);
   font-size: 1.3rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .impact-bar-wrap {
-  margin-bottom: 1.2rem;
+  margin-bottom: 1.5rem;
   cursor: pointer;
 }
 
@@ -543,12 +1297,13 @@ body {
   justify-content: space-between;
   font-size: 0.88rem;
   color: var(--cream-dark);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
 }
 
 .impact-bar {
   height: 8px;
-  background: rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.08);
   border-radius: 4px;
   overflow: hidden;
 }
@@ -556,129 +1311,208 @@ body {
 .impact-fill {
   height: 100%;
   border-radius: 4px;
-  background: linear-gradient(to right, #E74C3C, #C0392B);
+  background: linear-gradient(90deg, #E74C3C, #C0392B, #8B1A1A);
   width: 0%;
-  transition: width 1.5s ease;
+  transition: width 2s var(--ease-out-expo);
+  box-shadow: 0 0 20px rgba(231,76,60,0.3);
 }
 
 .impact-detail-text {
-  display: none;
+  max-height: 0;
+  overflow: hidden;
   font-size: 0.82rem;
   color: var(--cream-dark);
-  background: rgba(192,57,43,0.08);
-  padding: 0.7rem;
-  margin-top: 0.5rem;
-  border-left: 2px solid #E74C3C;
-  line-height: 1.6;
+  background: rgba(192,57,43,0.05);
+  border-left: 2px solid var(--red-light);
+  margin-top: 0;
+  line-height: 1.7;
+  transition: max-height 0.5s var(--ease-out-expo), padding 0.5s, margin 0.5s;
+  border-radius: 0 4px 4px 0;
 }
 
-.impact-bar-wrap.open .impact-detail-text { display:block; }
+.impact-bar-wrap.open .impact-detail-text {
+  max-height: 200px;
+  padding: 0.8rem;
+  margin-top: 0.8rem;
+}
 
-/* ── QUIZ ── */
+/* ═══════════════════════════════════════════════
+   QUIZ
+   ═══════════════════════════════════════════════ */
 .quiz-section {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(201,168,76,0.2);
-  border-radius: 6px;
-  padding: 2rem;
-  margin: 2rem 0;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(201,168,76,0.12);
+  border-radius: 8px;
+  padding: 2.5rem;
+  margin: 3rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.quiz-section::before {
+  content: '🎮';
+  position: absolute;
+  top: -20px;
+  right: 30px;
+  font-size: 3rem;
+  opacity: 0.1;
 }
 
 .quiz-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-display);
   font-size: 1.3rem;
   color: var(--gold);
   margin-bottom: 0.5rem;
 }
 
 .quiz-question {
-  font-size: 1rem;
+  font-size: 1.05rem;
   color: var(--cream);
-  margin-bottom: 1.2rem;
-  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  line-height: 1.7;
+  font-weight: 400;
 }
 
 .quiz-options {
   display: grid;
-  gap: 0.7rem;
+  gap: 0.8rem;
   margin-bottom: 1rem;
 }
 
 .quiz-option {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
-  padding: 0.9rem 1.2rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 1rem 1.5rem;
   cursor: pointer;
-  border-radius: 3px;
+  border-radius: 4px;
   font-size: 0.92rem;
   color: var(--cream-dark);
   text-align: left;
-  transition: all 0.2s;
+  transition: all 0.3s var(--ease-out-expo);
   width: 100%;
+  font-family: var(--font-body);
+  position: relative;
+  overflow: hidden;
 }
 
-.quiz-option:hover { background: rgba(201,168,76,0.1); border-color: var(--gold); color: var(--cream); }
-.quiz-option.correct { background: rgba(46,125,82,0.25); border-color: #2E7D52; color: #7DCEA0; }
-.quiz-option.wrong { background: rgba(192,57,43,0.2); border-color: #C0392B; color: #EC7063; }
-.quiz-option:disabled { cursor: default; pointer-events: none; }
+.quiz-option::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--gold);
+  transform: scaleY(0);
+  transition: transform 0.3s;
+}
+
+.quiz-option:hover::before {
+  transform: scaleY(1);
+}
+
+.quiz-option:hover {
+  background: rgba(201,168,76,0.08);
+  border-color: var(--gold);
+  color: var(--cream);
+  transform: translateX(5px);
+}
+
+.quiz-option.correct {
+  background: rgba(39,174,96,0.2);
+  border-color: var(--green);
+  color: var(--green-light);
+}
+
+.quiz-option.wrong {
+  background: rgba(192,57,43,0.15);
+  border-color: var(--red);
+  color: var(--red-light);
+}
+
+.quiz-option:disabled {
+  cursor: default;
+  pointer-events: none;
+}
 
 .quiz-feedback {
   font-size: 0.9rem;
-  padding: 0.8rem 1rem;
-  border-radius: 3px;
-  margin-top: 0.5rem;
-  display: none;
-  line-height: 1.6;
+  padding: 0;
+  max-height: 0;
+  overflow: hidden;
+  border-radius: 4px;
+  line-height: 1.7;
+  transition: all 0.5s var(--ease-out-expo);
 }
 
-.quiz-feedback.show { display: block; }
-.quiz-feedback.correct { background: rgba(46,125,82,0.2); color: #7DCEA0; border: 1px solid rgba(46,125,82,0.3); }
-.quiz-feedback.wrong { background: rgba(192,57,43,0.15); color: #EC7063; border: 1px solid rgba(192,57,43,0.25); }
+.quiz-feedback.show {
+  max-height: 300px;
+  padding: 1rem 1.2rem;
+  margin-top: 1rem;
+}
+
+.quiz-feedback.correct {
+  background: rgba(39,174,96,0.12);
+  color: var(--green-light);
+  border: 1px solid rgba(39,174,96,0.2);
+}
+
+.quiz-feedback.wrong {
+  background: rgba(192,57,43,0.1);
+  color: var(--red-light);
+  border: 1px solid rgba(192,57,43,0.15);
+}
 
 .quiz-next-btn {
   display: none;
-  margin-top: 1rem;
-  font-family: 'Bebas Neue', sans-serif;
-  letter-spacing: 0.15em;
+  margin-top: 1.5rem;
+  font-family: var(--font-accent);
+  letter-spacing: 0.12em;
   font-size: 0.95rem;
-  padding: 0.7rem 2rem;
-  background: var(--gold);
+  padding: 0.8rem 2.5rem;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
   color: var(--dark);
   border: none;
   cursor: pointer;
-  transition: opacity 0.2s;
-}
-.quiz-next-btn:hover { opacity: 0.85; }
-
-.quiz-score {
-  display: none;
-  text-align: center;
-  padding: 1.5rem;
+  transition: all 0.3s var(--ease-out-expo);
+  border-radius: 2px;
+  font-weight: 600;
 }
 
-.quiz-score h3 {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.6rem;
-  color: var(--gold);
-  margin-bottom: 0.5rem;
+.quiz-next-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(201,168,76,0.4);
 }
 
-.quiz-score p { color: var(--cream-dark); line-height: 1.7; }
-
-/* ── INTERACTIVE QUESTION ── */
+/* ═══════════════════════════════════════════════
+   INTERACTIVE QUESTION
+   ═══════════════════════════════════════════════ */
 .interactive-q {
-  background: rgba(123,45,139,0.1);
-  border: 1px solid rgba(123,45,139,0.3);
-  border-radius: 6px;
-  padding: 2rem;
+  background: rgba(123,45,139,0.08);
+  border: 1px solid rgba(123,45,139,0.2);
+  border-radius: 8px;
+  padding: 2.5rem;
   margin: 2rem 0;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.interactive-q::before {
+  content: '💭';
+  position: absolute;
+  top: -30px;
+  left: -20px;
+  font-size: 8rem;
+  opacity: 0.04;
+  transform: rotate(-15deg);
 }
 
 .interactive-q h3 {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.2rem;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
   color: #D7BDE2;
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
+  position: relative;
+  z-index: 1;
 }
 
 .tradition-options {
@@ -686,36 +1520,90 @@ body {
   flex-wrap: wrap;
   gap: 0.8rem;
   justify-content: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
 }
 
 .trad-btn {
-  padding: 0.6rem 1.4rem;
-  border: 1px solid rgba(123,45,139,0.4);
-  background: rgba(123,45,139,0.1);
+  padding: 0.7rem 1.6rem;
+  border: 1px solid rgba(123,45,139,0.3);
+  background: rgba(123,45,139,0.08);
   color: #D7BDE2;
   cursor: pointer;
-  border-radius: 20px;
-  font-size: 0.88rem;
-  transition: all 0.2s;
-  font-family: 'DM Sans', sans-serif;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  transition: all 0.3s var(--ease-out-expo);
+  font-family: var(--font-body);
+  font-weight: 500;
 }
 
 .trad-btn:hover, .trad-btn.selected {
-  background: rgba(123,45,139,0.5);
+  background: rgba(123,45,139,0.4);
   border-color: #9B59B6;
   color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(123,45,139,0.3);
 }
 
 #trad-response {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: #D7BDE2;
-  min-height: 40px;
+  min-height: 50px;
   font-style: italic;
-  line-height: 1.6;
+  line-height: 1.7;
+  transition: all 0.5s var(--ease-out-expo);
+  position: relative;
+  z-index: 1;
 }
 
-/* ── SUSTAINABLE ACTIONS ── */
+/* ═══════════════════════════════════════════════
+   PROBLEM ITEMS
+   ═══════════════════════════════════════════════ */
+.problem-item {
+  display: flex;
+  gap: 1.2rem;
+  padding: 1.5rem;
+  border-left: 3px solid var(--orange);
+  background: rgba(230,126,34,0.04);
+  margin-bottom: 1rem;
+  cursor: pointer;
+  transition: all 0.4s var(--ease-out-expo);
+  border-radius: 0 6px 6px 0;
+}
+
+.problem-item:hover {
+  background: rgba(230,126,34,0.1);
+  transform: translateX(5px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.problem-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+  transition: transform 0.3s var(--ease-spring);
+}
+
+.problem-item:hover .problem-icon {
+  transform: scale(1.2);
+}
+
+.problem-item h4 {
+  color: #FAD7A0;
+  font-size: 1rem;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+}
+
+.problem-item p {
+  font-size: 0.85rem;
+  color: var(--cream-dark);
+  line-height: 1.7;
+}
+
+/* ═══════════════════════════════════════════════
+   ACTION CARDS
+   ═══════════════════════════════════════════════ */
 .action-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -724,112 +1612,173 @@ body {
 }
 
 .action-card {
-  background: rgba(26,106,74,0.1);
-  border: 1px solid rgba(26,106,74,0.3);
-  border-radius: 6px;
-  padding: 1.5rem;
+  background: rgba(26,106,74,0.08);
+  border: 1px solid rgba(26,106,74,0.2);
+  border-radius: 8px;
+  padding: 2rem;
   text-align: center;
-  transition: all 0.3s;
+  transition: all 0.4s var(--ease-out-expo);
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.action-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(39,174,96,0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.action-card:hover::after {
+  opacity: 1;
 }
 
 .action-card:hover {
-  background: rgba(26,106,74,0.25);
-  border-color: #27AE60;
-  transform: translateY(-3px);
+  background: rgba(26,106,74,0.2);
+  border-color: var(--green);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.4);
 }
 
-.action-icon { font-size: 2rem; margin-bottom: 0.7rem; }
+.action-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.8rem;
+  transition: transform 0.3s var(--ease-spring);
+}
+
+.action-card:hover .action-icon {
+  transform: scale(1.2) rotate(10deg);
+}
 
 .action-card h3 {
   font-size: 0.9rem;
   font-weight: 600;
   color: #82E0AA;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.5rem;
 }
 
-.action-card p { font-size: 0.8rem; color: #A9DFBF; line-height: 1.6; }
+.action-card p {
+  font-size: 0.8rem;
+  color: #A9DFBF;
+  line-height: 1.6;
+}
 
-/* ── QR SECTION ── */
+/* ═══════════════════════════════════════════════
+   QR SECTION
+   ═══════════════════════════════════════════════ */
 .qr-section {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(201,168,76,0.15);
-  border-radius: 6px;
-  padding: 1.5rem;
-  margin: 1.5rem 0;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(201,168,76,0.1);
+  border-radius: 8px;
+  padding: 2rem;
+  margin: 2rem 0;
 }
 
 .qr-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 0.9rem;
-  letter-spacing: 0.3em;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.25em;
   color: var(--gold);
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .qr-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
-  align-items: flex-start;
+  gap: 1.2rem;
+  align-items: stretch;
 }
 
 .qr-item {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 1rem;
   flex: 1;
-  min-width: 200px;
+  min-width: 220px;
   cursor: pointer;
-  padding: 0.8rem;
-  border: 1px solid rgba(201,168,76,0.1);
-  border-radius: 4px;
-  transition: all 0.2s;
+  padding: 1rem;
+  border: 1px solid rgba(201,168,76,0.08);
+  border-radius: 6px;
+  transition: all 0.3s var(--ease-out-expo);
 }
 
 .qr-item:hover {
-  background: rgba(201,168,76,0.08);
+  background: rgba(201,168,76,0.06);
   border-color: rgba(201,168,76,0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
 }
 
 .qr-box {
-  width: 56px; height: 56px;
+  width: 60px;
+  height: 60px;
   background: white;
   border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.5rem;
   flex-shrink: 0;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
-.qr-box svg { width:100%; height:100%; }
+.qr-box svg {
+  width: 100%;
+  height: 100%;
+}
 
-.qr-text h4 { font-size: 0.85rem; color: var(--cream); font-weight: 600; margin-bottom: 0.2rem; }
-.qr-text p { font-size: 0.75rem; color: var(--cream-dark); line-height: 1.5; }
+.qr-text h4 {
+  font-size: 0.85rem;
+  color: var(--cream);
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
 
-/* ── AUDIO PLAYER ── */
+.qr-text p {
+  font-size: 0.75rem;
+  color: var(--cream-dark);
+  line-height: 1.5;
+}
+
+/* ═══════════════════════════════════════════════
+   AUDIO PLAYER
+   ═══════════════════════════════════════════════ */
 .audio-player {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(201,168,76,0.15);
-  padding: 1rem 1.5rem;
-  border-radius: 4px;
+  gap: 1.2rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(201,168,76,0.1);
+  padding: 1.2rem 1.8rem;
+  border-radius: 6px;
   margin: 1.5rem 0;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s var(--ease-out-expo);
 }
 
-.audio-player:hover { background: rgba(201,168,76,0.08); }
+.audio-player:hover {
+  background: rgba(201,168,76,0.05);
+  border-color: rgba(201,168,76,0.25);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.audio-player.playing {
+  border-color: var(--gold);
+  box-shadow: 0 0 30px rgba(201,168,76,0.15);
+}
 
 .audio-play-btn {
-  width: 40px; height:40px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: var(--gold);
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
   border: none;
   cursor: pointer;
   display: flex;
@@ -837,19 +1786,31 @@ body {
   justify-content: center;
   font-size: 1rem;
   flex-shrink: 0;
-  transition: transform 0.2s;
+  transition: all 0.3s var(--ease-spring);
   color: var(--dark);
 }
 
-.audio-play-btn:hover { transform: scale(1.1); }
+.audio-player:hover .audio-play-btn {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(201,168,76,0.4);
+}
 
-.audio-info h4 { font-size: 0.9rem; color: var(--cream); margin-bottom: 0.2rem; }
-.audio-info p { font-size: 0.78rem; color: var(--cream-dark); }
+.audio-info h4 {
+  font-size: 0.9rem;
+  color: var(--cream);
+  margin-bottom: 0.2rem;
+  font-weight: 500;
+}
+
+.audio-info p {
+  font-size: 0.78rem;
+  color: var(--cream-dark);
+}
 
 .audio-bar {
   flex: 1;
   height: 3px;
-  background: rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.08);
   border-radius: 2px;
   position: relative;
   overflow: hidden;
@@ -857,88 +1818,23 @@ body {
 
 .audio-progress {
   height: 100%;
-  background: var(--gold);
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
   width: 0%;
   border-radius: 2px;
   transition: width 0.1s linear;
+  box-shadow: 0 0 10px var(--gold-glow);
 }
 
-/* ── NAVIGATION ARROWS ── */
-.room-nav-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 2rem;
-  max-width: 1100px;
-  margin: 0 auto;
-  border-top: 1px solid rgba(201,168,76,0.15);
-}
-
-.nav-arrow {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-size: 0.88rem;
-  color: var(--gold);
-  cursor: pointer;
-  background: transparent;
-  border: 1px solid rgba(201,168,76,0.3);
-  padding: 0.6rem 1.2rem;
-  transition: all 0.2s;
-  font-family: 'DM Sans', sans-serif;
-}
-
-.nav-arrow:hover { background: rgba(201,168,76,0.1); border-color: var(--gold); }
-
-/* ── ROOM ACCENT BORDERS ── */
-.room-1 .room-hero-bg { background: linear-gradient(135deg, #0D1F3C 0%, #1A3A5C 60%, #0D2A45 100%); }
-.room-2 .room-hero-bg { background: linear-gradient(135deg, #1A3D2A 0%, #2E7D52 60%, #1A4D33 100%); }
-.room-3 .room-hero-bg { background: linear-gradient(135deg, #3D1A5C 0%, #7B2D8B 60%, #4D1A6B 100%); }
-.room-4 .room-hero-bg { background: linear-gradient(135deg, #4D1A10 0%, #C0392B 60%, #A93226 100%); }
-.room-5 .room-hero-bg { background: linear-gradient(135deg, #3D2010 0%, #8B4513 60%, #6B3410 100%); }
-.room-6 .room-hero-bg { background: linear-gradient(135deg, #0D3D26 0%, #1A6B4A 60%, #0D4D33 100%); }
-
-.room-deco {
-  position:absolute;
-  right: 2rem; bottom: 1.5rem;
-  font-size: 6rem;
-  opacity: 0.08;
-  z-index:1;
-  line-height:1;
-}
-
-/* ── SECTION TITLE ── */
-.section-label {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 0.8rem;
-  letter-spacing: 0.4em;
-  color: var(--gold);
-  margin-bottom: 0.5rem;
-  opacity: 0.8;
-}
-
-.section-heading {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.6rem;
-  color: var(--cream);
-  margin-bottom: 1rem;
-}
-
-.divider {
-  width: 60px;
-  height: 2px;
-  background: var(--gold);
-  margin-bottom: 2rem;
-}
-
-/* ── HOTSPOT WRAPPER ── */
+/* ═══════════════════════════════════════════════
+   HOTSPOT WRAPPER
+   ═══════════════════════════════════════════════ */
 .hotspot-wrap {
   position: relative;
   display: inline-block;
   width: 100%;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(201,168,76,0.15);
-  border-radius: 4px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(201,168,76,0.1);
+  border-radius: 8px;
   overflow: visible;
   margin: 1.5rem 0;
 }
@@ -951,22 +1847,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.hotspot-label {
-  position: absolute;
-  font-size: 0.75rem;
-  color: var(--cream-dark);
-  padding: 0.4rem 0.7rem;
-  background: rgba(6,6,8,0.9);
-  border: 1px solid rgba(201,168,76,0.3);
-  text-align: center;
-  font-style: italic;
+  border-radius: 8px;
 }
 
 .hotspot {
   position: absolute;
-  width: 26px; height: 26px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background: rgba(201,168,76,0.9);
   border: 2px solid white;
@@ -977,316 +1864,786 @@ body {
   font-size: 0.75rem;
   font-weight: 700;
   color: var(--dark);
-  transition: all 0.2s;
-  box-shadow: 0 0 0 4px rgba(201,168,76,0.3);
-  animation: hotpulse 2s infinite;
+  transition: all 0.3s var(--ease-spring);
+  box-shadow: 0 0 0 6px rgba(201,168,76,0.25);
+  animation: hotpulse 2.5s ease-in-out infinite;
   z-index: 5;
 }
 
 @keyframes hotpulse {
-  0%,100% { box-shadow: 0 0 0 4px rgba(201,168,76,0.3); }
-  50% { box-shadow: 0 0 0 8px rgba(201,168,76,0.1); }
+  0%, 100% { box-shadow: 0 0 0 6px rgba(201,168,76,0.25); }
+  50% { box-shadow: 0 0 0 12px rgba(201,168,76,0.08); }
 }
 
-.hotspot:hover { transform: scale(1.2); background: var(--gold-light); }
+.hotspot:hover {
+  transform: scale(1.3);
+  background: var(--gold-light);
+  box-shadow: 0 0 0 15px rgba(201,168,76,0.1);
+}
 
 .hotspot-popup {
   position: absolute;
-  background: rgba(6,6,8,0.97);
+  background: rgba(10,10,12,0.98);
   border: 1px solid var(--gold);
-  padding: 1rem;
-  width: 220px;
-  border-radius: 4px;
+  padding: 1.2rem;
+  width: 250px;
+  border-radius: 6px;
   z-index: 10;
   display: none;
-  top: 110%;
+  top: 120%;
   left: 50%;
   transform: translateX(-50%);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.6);
 }
 
-.hotspot-popup h4 { color: var(--gold); font-size: 0.9rem; margin-bottom: 0.4rem; font-family: 'Playfair Display', serif; }
-.hotspot-popup p { color: var(--cream-dark); font-size: 0.8rem; line-height: 1.55; }
-.hotspot-popup .close-hs { position:absolute; top:0.4rem; right:0.6rem; cursor:pointer; color:var(--cream-dark); font-size:0.9rem; }
-
-.hotspot.active .hotspot-popup { display: block; }
-
-/* ── PROGRESS ── */
-.progress-bar-outer {
-  position: fixed;
-  top: 60px; left:0; right:0;
-  height: 3px;
-  background: rgba(255,255,255,0.05);
-  z-index: 99;
+.hotspot-popup::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 16px;
+  height: 16px;
+  background: rgba(10,10,12,0.98);
+  border: 1px solid var(--gold);
+  border-right: none;
+  border-bottom: none;
 }
 
-.progress-bar-inner {
-  height: 100%;
-  background: var(--gold);
-  transition: width 0.5s ease;
+.hotspot-popup h4 {
+  color: var(--gold);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  font-family: var(--font-display);
 }
 
-/* ── ANIMATIONS ── */
-@keyframes fadeDown {
-  from { opacity:0; transform: translateY(-20px); }
-  to   { opacity:1; transform: translateY(0); }
+.hotspot-popup p {
+  color: var(--cream-dark);
+  font-size: 0.8rem;
+  line-height: 1.6;
 }
 
-@keyframes fadeUp {
-  from { opacity:0; transform: translateY(20px); }
-  to   { opacity:1; transform: translateY(0); }
-}
-
-.fade-in {
-  animation: fadeUp 0.6s ease both;
-}
-
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--darker); }
-::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.4); border-radius: 3px; }
-
-/* ── ROOM PROBLEMS SPECIFICS ── */
-.problem-item {
-  display: flex;
-  gap: 1rem;
-  padding: 1.2rem;
-  border-left: 3px solid #E67E22;
-  background: rgba(230,126,34,0.06);
-  margin-bottom: 1rem;
+.hotspot-popup .close-hs {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.6rem;
   cursor: pointer;
-  transition: all 0.2s;
+  color: var(--cream-dark);
+  font-size: 1rem;
+  transition: color 0.2s;
 }
 
-.problem-item:hover { background: rgba(230,126,34,0.12); }
+.hotspot-popup .close-hs:hover {
+  color: var(--gold);
+}
 
-.problem-icon { font-size: 1.5rem; flex-shrink:0; }
+.hotspot.active .hotspot-popup {
+  display: block;
+  animation: popupIn 0.3s var(--ease-spring);
+}
 
-.problem-item h4 { color: #FAD7A0; font-size: 0.95rem; margin-bottom: 0.3rem; }
-.problem-item p { font-size: 0.85rem; color: var(--cream-dark); line-height: 1.6; }
+@keyframes popupIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
 
-/* ── FINAL REFLECTION ── */
+/* ═══════════════════════════════════════════════
+   FINAL REFLECTION
+   ═══════════════════════════════════════════════ */
 .final-reflection {
-  background: linear-gradient(135deg, rgba(26,58,92,0.4), rgba(26,106,74,0.4));
-  border: 1px solid rgba(201,168,76,0.25);
-  border-radius: 8px;
-  padding: 2.5rem;
+  background: linear-gradient(135deg, rgba(26,58,92,0.3), rgba(26,106,74,0.3));
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 12px;
+  padding: 3rem;
   margin: 3rem 0;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.final-reflection::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(ellipse at 50% 50%, rgba(201,168,76,0.05) 0%, transparent 70%);
+  animation: reflectionGlow 8s ease-in-out infinite;
+}
+
+@keyframes reflectionGlow {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(180deg); }
 }
 
 .final-reflection h2 {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.6rem;
+  font-family: var(--font-display);
+  font-size: 1.8rem;
   color: var(--gold);
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
 }
 
 .final-reflection blockquote {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-elegant);
   font-style: italic;
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   color: var(--cream);
   max-width: 650px;
-  margin: 0 auto 1.5rem;
-  line-height: 1.7;
+  margin: 0 auto 2rem;
+  line-height: 1.8;
+  position: relative;
+  z-index: 1;
 }
 
-.vote-options { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem; }
+.vote-options {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+  position: relative;
+  z-index: 1;
+}
 
 .vote-btn {
-  font-family: 'Bebas Neue', sans-serif;
-  letter-spacing: 0.15em;
-  font-size: 1rem;
-  padding: 0.9rem 2rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 1rem 2rem;
   border: 2px solid;
   background: transparent;
   cursor: pointer;
-  transition: all 0.3s;
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 600;
+  transition: all 0.4s var(--ease-out-expo);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
 }
 
-.vote-btn.valoriza { border-color: #2E7D52; color: #82E0AA; }
-.vote-btn.valoriza:hover, .vote-btn.valoriza.voted { background: rgba(46,125,82,0.3); }
-.vote-btn.transforma { border-color: #C0392B; color: #EC7063; }
-.vote-btn.transforma:hover, .vote-btn.transforma.voted { background: rgba(192,57,43,0.3); }
-.vote-btn.ambos { border-color: #E67E22; color: #F0B27A; }
-.vote-btn.ambos:hover, .vote-btn.ambos.voted { background: rgba(230,126,34,0.3); }
+.vote-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
 
-#vote-result { margin-top: 1rem; font-size: 0.9rem; color: var(--cream-dark); line-height: 1.7; display: none; }
+.vote-btn:hover::before {
+  opacity: 0.15;
+}
 
-/* ── RESPONSIVE ── */
-@media (max-width: 600px) {
-  .museum-header { padding: 0.6rem 1rem; }
-  .room-nav { display: none; }
-  .room-content { padding: 2rem 1rem; }
-  .nav-btn { font-size: 0.65rem; padding: 0.3rem 0.6rem; }
-  .section-grid { grid-template-columns: 1fr; }
+.vote-btn.valoriza {
+  border-color: var(--green);
+  color: #82E0AA;
+}
+.vote-btn.valoriza::before { background: var(--green); }
+.vote-btn.valoriza:hover, .vote-btn.valoriza.voted {
+  background: rgba(39,174,96,0.25);
+  box-shadow: 0 8px 30px rgba(39,174,96,0.3);
+  transform: translateY(-3px);
+}
+
+.vote-btn.transforma {
+  border-color: var(--red);
+  color: #EC7063;
+}
+.vote-btn.transforma::before { background: var(--red); }
+.vote-btn.transforma:hover, .vote-btn.transforma.voted {
+  background: rgba(192,57,43,0.25);
+  box-shadow: 0 8px 30px rgba(192,57,43,0.3);
+  transform: translateY(-3px);
+}
+
+.vote-btn.ambos {
+  border-color: var(--orange);
+  color: #F0B27A;
+}
+.vote-btn.ambos::before { background: var(--orange); }
+.vote-btn.ambos:hover, .vote-btn.ambos.voted {
+  background: rgba(230,126,34,0.25);
+  box-shadow: 0 8px 30px rgba(230,126,34,0.3);
+  transform: translateY(-3px);
+}
+
+#vote-result {
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+  color: var(--cream-dark);
+  line-height: 1.8;
+  display: none;
+  position: relative;
+  z-index: 1;
+  animation: fadeSlideUp 0.5s var(--ease-out-expo);
+}
+
+/* ═══════════════════════════════════════════════
+   ROOM NAV FOOTER
+   ═══════════════════════════════════════════════ */
+.room-nav-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2.5rem 0;
+  border-top: 1px solid rgba(201,168,76,0.1);
+  margin-top: 3rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.nav-arrow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  color: var(--gold);
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid rgba(201,168,76,0.2);
+  padding: 0.7rem 1.4rem;
+  transition: all 0.3s var(--ease-out-expo);
+  font-family: var(--font-body);
+  font-weight: 500;
+  border-radius: 2px;
+}
+
+.nav-arrow:hover {
+  background: rgba(201,168,76,0.08);
+  border-color: var(--gold);
+  box-shadow: 0 4px 20px rgba(201,168,76,0.2);
+  transform: translateX(0);
+}
+
+.nav-arrow.prev:hover {
+  transform: translateX(-5px);
+}
+
+.nav-arrow.next:hover {
+  transform: translateX(5px);
+}
+
+/* ═══════════════════════════════════════════════
+   IMAGE GALLERY
+   ═══════════════════════════════════════════════ */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.2rem;
+  margin: 2rem 0;
+}
+
+.gallery-item {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  aspect-ratio: 4/3;
+  background: var(--dark-blue);
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease-out-expo);
+}
+
+.gallery-item:hover img {
+  transform: scale(1.1);
+}
+
+.gallery-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
+  display: flex;
+  align-items: flex-end;
+  padding: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.gallery-item:hover .gallery-overlay {
+  opacity: 1;
+}
+
+.gallery-overlay span {
+  color: var(--cream);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════════
+   LIGHTBOX
+   ═══════════════════════════════════════════════ */
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(0,0,0,0.95);
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.lightbox.open {
+  display: flex;
+  animation: lightboxIn 0.4s var(--ease-out-expo);
+}
+
+@keyframes lightboxIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.lightbox-content {
+  max-width: 90vw;
+  max-height: 85vh;
+  border-radius: 8px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+  border: 1px solid rgba(201,168,76,0.2);
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  font-size: 2rem;
+  color: var(--cream);
+  cursor: pointer;
+  background: rgba(255,255,255,0.1);
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.lightbox-close:hover {
+  background: rgba(255,255,255,0.2);
+  transform: rotate(90deg);
+}
+
+/* ═══════════════════════════════════════════════
+   TOAST NOTIFICATIONS
+   ═══════════════════════════════════════════════ */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 10001;
+  background: var(--dark);
+  border: 1px solid var(--gold);
+  padding: 1rem 1.5rem;
+  border-radius: 6px;
+  color: var(--cream);
+  font-size: 0.9rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  animation: toastIn 0.4s var(--ease-spring), toastOut 0.3s 2.7s ease forwards;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  backdrop-filter: blur(10px);
+}
+
+@keyframes toastIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes toastOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .room-hero {
+    height: 40vh;
+    min-height: 280px;
+    padding: 2rem;
+  }
+  
+  .room-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+  }
+  
+  .section-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .museum-header {
+    padding: 0.6rem 1rem;
+  }
+  
+  .room-nav-desktop {
+    display: none;
+  }
+  
+  .mobile-nav-toggle {
+    display: block;
+  }
+  
+  .room-content {
+    padding: 2rem 1rem 4rem;
+  }
+  
+  .room-hero {
+    height: 35vh;
+    min-height: 240px;
+    padding: 1.5rem;
+  }
+  
+  .section-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .culture-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+  
+  .action-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  
+  .final-reflection {
+    padding: 2rem 1rem;
+  }
+  
+  .vote-options {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .vote-btn {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .room-nav-footer {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+  
+  .nav-arrow {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .entrance-title {
+    font-size: clamp(2rem, 8vw, 3rem);
+  }
+  
+  .room-hero {
+    height: 30vh;
+    min-height: 200px;
+  }
+  
+  .room-deco {
+    font-size: 4rem;
+  }
+  
+  .qr-grid {
+    flex-direction: column;
+  }
+  
+  .timeline {
+    padding-left: 2rem;
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   ESTILOS DE IMAGEM DO MUSEU DO IPIRANGA
+   ═══════════════════════════════════════════════ */
+.museum-image-frame {
+  position: relative;
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+  margin: 2rem 0;
+}
+
+.museum-image-frame img {
+  width: 100%;
+  display: block;
+  transition: transform 0.6s var(--ease-out-expo);
+}
+
+.museum-image-frame:hover img {
+  transform: scale(1.03);
+}
+
+.museum-image-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+  color: var(--cream);
+  font-size: 0.9rem;
+  font-family: var(--font-elegant);
+  font-style: italic;
 }
 </style>
 </head>
 <body>
 
-<!-- ══════════ ENTRANCE ══════════ -->
-<div id="entrance">
-  <div class="entrance-badge">TRABALHO ESCOLAR — APROFUNDAMENTO EM HISTÓRIA</div>
-  <h1 class="entrance-title">Museu Virtual<br><span>São Paulo</span></h1>
-  <p class="entrance-subtitle">Uma experiência imersiva pelos caminhos da história, cultura e turismo da maior metrópole do Brasil.</p>
-  <div class="central-question">
-    🖐 Pergunta Central:<br>
-    "O turismo <em>valoriza</em> ou <em>transforma</em> a identidade das cidades?"
+<!-- ═══════════════════════════════════════════════
+   CURSOR PERSONALIZADO
+   ═══════════════════════════════════════════════ -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-follower" id="cursorFollower"></div>
+
+<!-- ═══════════════════════════════════════════════
+   PARTÍCULAS DE FUNDO
+   ═══════════════════════════════════════════════ -->
+<div id="particles-container"></div>
+
+<!-- ═══════════════════════════════════════════════
+   SPLASH SCREEN
+   ═══════════════════════════════════════════════ -->
+<div id="splash-screen">
+  <div class="splash-logo">MUSEU VIRTUAL</div>
+  <div style="font-family:var(--font-elegant);color:var(--cream-dark);font-size:1.1rem;margin-top:0.5rem;font-style:italic;">São Paulo · História & Turismo</div>
+  <div class="splash-loader">
+    <div class="splash-loader-bar" id="splashLoaderBar"></div>
   </div>
-  <button class="enter-btn" onclick="enterMuseum()">▶ ENTRAR NO MUSEU</button>
 </div>
 
-<!-- ══════════ MUSEUM ══════════ -->
+<!-- ═══════════════════════════════════════════════
+   ENTRADA PRINCIPAL
+   ═══════════════════════════════════════════════ -->
+<div id="entrance">
+  <div class="entrance-content">
+    <div class="entrance-badge">EXPERIÊNCIA IMERSIVA INTERATIVA</div>
+    <h1 class="entrance-title">Museu Virtual<br><span>São Paulo</span></h1>
+    <p class="entrance-subtitle">
+      Uma jornada interativa pelos caminhos da história, cultura e turismo 
+      da maior metrópole do Brasil. Inspirado no icônico 
+      <strong style="color:var(--gold);">Museu do Ipiranga</strong>.
+    </p>
+    <div class="central-question">
+      🖐 Pergunta Central:<br>
+      "O turismo <em>valoriza</em> ou <em>transforma</em> a identidade das cidades?"
+    </div>
+    <button class="enter-btn" onclick="enterMuseum()">
+      <span>ENTRAR NO MUSEU</span>
+      <span class="enter-btn-icon">▶</span>
+    </button>
+    <div style="margin-top:1.5rem;font-size:0.8rem;color:var(--cream-dark);opacity:0.6;">
+      6 salas temáticas · Elementos interativos · Áudio imersivo
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+   MUSEUM
+   ═══════════════════════════════════════════════ -->
 <div id="museum">
 
   <!-- Header -->
-  <header class="museum-header">
-    <div class="museum-logo">🏛 Museu SP</div>
-    <nav class="room-nav">
-      <button class="nav-btn active" onclick="goRoom(1)">Sala 1</button>
-      <button class="nav-btn" onclick="goRoom(2)">Sala 2</button>
-      <button class="nav-btn" onclick="goRoom(3)">Sala 3</button>
-      <button class="nav-btn" onclick="goRoom(4)">Sala 4</button>
-      <button class="nav-btn" onclick="goRoom(5)">Sala 5</button>
-      <button class="nav-btn" onclick="goRoom(6)">Sala 6</button>
+  <header class="museum-header" id="museumHeader">
+    <div class="museum-logo" onclick="exitMuseum()" title="Voltar à entrada">
+      <span class="museum-logo-icon">🏛</span> Museu SP
+    </div>
+    
+    <!-- Desktop Nav -->
+    <nav class="room-nav-desktop" id="roomNavDesktop">
+      <button class="nav-btn active" onclick="goRoom(1)">Sala 1 · História</button>
+      <button class="nav-btn" onclick="goRoom(2)">Sala 2 · Turismo</button>
+      <button class="nav-btn" onclick="goRoom(3)">Sala 3 · Cultura</button>
+      <button class="nav-btn" onclick="goRoom(4)">Sala 4 · Ambiente</button>
+      <button class="nav-btn" onclick="goRoom(5)">Sala 5 · Problemas</button>
+      <button class="nav-btn" onclick="goRoom(6)">Sala 6 · Soluções</button>
     </nav>
-    <button class="home-btn" onclick="exitMuseum()">✕ Saída</button>
+    
+    <!-- Mobile Nav Toggle -->
+    <button class="mobile-nav-toggle" onclick="toggleMobileNav()" aria-label="Menu de navegação">
+      ☰ Salas
+    </button>
+    
+    <button class="home-btn" onclick="exitMuseum()" title="Sair do museu">
+      ✕ Sair
+    </button>
   </header>
+
+  <!-- Mobile Nav Menu -->
+  <div class="mobile-nav-menu" id="mobileNavMenu">
+    <button class="nav-btn active" onclick="goRoom(1);closeMobileNav()">Sala 1</button>
+    <button class="nav-btn" onclick="goRoom(2);closeMobileNav()">Sala 2</button>
+    <button class="nav-btn" onclick="goRoom(3);closeMobileNav()">Sala 3</button>
+    <button class="nav-btn" onclick="goRoom(4);closeMobileNav()">Sala 4</button>
+    <button class="nav-btn" onclick="goRoom(5);closeMobileNav()">Sala 5</button>
+    <button class="nav-btn" onclick="goRoom(6);closeMobileNav()">Sala 6</button>
+  </div>
 
   <!-- Progress bar -->
   <div class="progress-bar-outer">
     <div class="progress-bar-inner" id="progress-bar" style="width:16.6%"></div>
   </div>
 
-  <!-- ══ SALA 1 ══ -->
+  <!-- ═══════════════════════════════════════
+       SALA 1 – A HISTÓRIA DE SÃO PAULO
+       ═══════════════════════════════════════ -->
   <div id="room-1" class="room room-1 active">
     <div class="room-hero">
       <div class="room-hero-bg"></div>
+      <div class="room-hero-particles" id="heroParticles1"></div>
       <div class="room-deco">🏙</div>
       <div class="room-hero-content">
         <div class="room-number">SALA 01 / 06</div>
         <h2 class="room-title">A <span>História</span><br>de São Paulo</h2>
       </div>
     </div>
+    
     <div class="room-content fade-in">
       <div class="section-label">CONTEXTO HISTÓRICO</div>
-      <h3 class="section-heading">Da fundação à metrópole</h3>
+      <h3 class="section-heading">Da fundação jesuíta à metrópole global</h3>
       <div class="divider"></div>
 
-      <p class="lead-text">São Paulo foi fundada em 25 de janeiro de 1554 pelos padres jesuítas Manuel da Nóbrega e José de Anchieta. De pequena aldeia missionária, cresceu até se tornar a maior cidade do Brasil e uma das maiores do mundo.</p>
+      <p class="lead-text">
+        São Paulo foi fundada em <strong style="color:var(--gold);">25 de janeiro de 1554</strong> 
+        pelos padres jesuítas Manuel da Nóbrega e José de Anchieta. De uma pequena aldeia 
+        missionária no Planalto de Piratininga, cresceu através do comércio, do café e da 
+        imigração até se tornar a maior cidade do Brasil e uma das maiores do mundo.
+      </p>
 
       <!-- Audio Player -->
-      <div class="audio-player" onclick="playAudio(this)">
+      <div class="audio-player" onclick="toggleAudio(this, 'audio1')" id="audioPlayer1">
         <button class="audio-play-btn">▶</button>
         <div class="audio-info">
-          <h4>🎙 Narração: A Fundação de São Paulo</h4>
-          <p>Clique para ouvir um resumo narrado da história da cidade</p>
+          <h4>🎙 Narração Imersiva: A Fundação de São Paulo</h4>
+          <p>Ouça a história da cidade contada de forma envolvente</p>
         </div>
-        <div class="audio-bar"><div class="audio-progress"></div></div>
+        <div class="audio-bar"><div class="audio-progress" id="audioProgress1"></div></div>
       </div>
 
-      <!-- Timeline -->
-      <div class="section-label" style="margin-top:2rem">LINHA DO TEMPO</div>
-      <h3 class="section-heading">Cronologia da Cidade</h3>
+      <!-- Museum Image Frame -->
+      <div class="museum-image-frame">
+        <div style="background: linear-gradient(135deg, #1a2a4a, #0d1f3c, #1a3a5c); padding: 2rem; text-align: center; position: relative; min-height: 250px; display: flex; align-items: center; justify-content: center;">
+          <div style="text-align: center; position: relative; z-index: 2;">
+            <div style="font-size: 6rem; margin-bottom: 1rem; filter: drop-shadow(0 8px 20px rgba(0,0,0,0.5));">🏛️</div>
+            <div style="font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--gold); letter-spacing: 0.1em;">MUSEU DO IPIRANGA</div>
+            <div style="font-size: 0.85rem; color: var(--cream-dark); margin-top: 0.8rem;">Inaugurado em 1895 · Reinaugurado em 2022</div>
+            <div style="font-size: 0.75rem; color: var(--cream-dark); margin-top: 0.3rem; font-style: italic;">Símbolo da Independência do Brasil</div>
+          </div>
+        </div>
+        <div class="museum-image-caption">
+          "O Museu do Ipiranga preserva a memória da Independência do Brasil, proclamada por Dom Pedro I em 7 de setembro de 1822 às margens do Rio Ipiranga."
+        </div>
+      </div>
+
+      <!-- Timeline Interativa -->
+      <div class="section-label" style="margin-top:3rem;">LINHA DO TEMPO INTERATIVA</div>
+      <h3 class="section-heading">Marcos da História Paulistana</h3>
       <div class="divider"></div>
-      <p style="font-size:0.85rem; color:var(--cream-dark); margin-bottom:1rem;">👆 Clique em cada evento para mais detalhes</p>
+      <p style="font-size:0.85rem; color:var(--cream-dark); margin-bottom:1.5rem;">
+        👆 <strong>Clique em cada evento</strong> para expandir e descobrir detalhes fascinantes
+      </p>
 
-      <div class="timeline">
-        <div class="timeline-item" onclick="toggleTimeline(this)">
-          <div class="timeline-year">1554</div>
-          <div class="timeline-desc">Fundação por padres jesuítas no Planalto de Piratininga</div>
-          <div class="timeline-extra">Os jesuítas Manuel da Nóbrega e José de Anchieta estabeleceram uma missão educacional entre os indígenas. O local foi escolhido estrategicamente por sua altitude e pela confluência dos rios Tamanduateí e Anhangabaú. O nome "Piratininga" vem do tupi e significa "peixe seco ao sol".</div>
-        </div>
-        <div class="timeline-item" onclick="toggleTimeline(this)">
-          <div class="timeline-year">1600s</div>
-          <div class="timeline-desc">Entreposto dos bandeirantes — expedições ao interior do Brasil</div>
-          <div class="timeline-extra">São Paulo se tornou base das Bandeiras — expedições que exploraram o interior do Brasil em busca de ouro, pedras preciosas e indígenas. Os bandeirantes expandiram enormemente o território brasileiro, estabelecendo rotas comerciais e novos assentamentos.</div>
-        </div>
-        <div class="timeline-item" onclick="toggleTimeline(this)">
-          <div class="timeline-year">1822</div>
-          <div class="timeline-desc">Independência do Brasil às margens do Rio Ipiranga</div>
-          <div class="timeline-extra">Em 7 de setembro de 1822, Dom Pedro I proclamou a Independência do Brasil às margens do Rio Ipiranga, em São Paulo. O grito do Ipiranga é um dos momentos mais marcantes da história brasileira. O Museu do Ipiranga foi construído no local para celebrar e preservar este evento histórico.</div>
-        </div>
-        <div class="timeline-item" onclick="toggleTimeline(this)">
-          <div class="timeline-year">1850–1900</div>
-          <div class="timeline-desc">Ciclo do café — explosão econômica e imigração em massa</div>
-          <div class="timeline-extra">O café transformou São Paulo. Fazendeiros enriquecidos ("barões do café") financiaram o desenvolvimento urbano, ferrovias e infraestrutura. Simultaneamente, milhões de imigrantes chegaram da Itália, Japão, Alemanha, Espanha, Portugal e outros países para trabalhar nas fazendas e nas nascentes indústrias.</div>
-        </div>
-        <div class="timeline-item" onclick="toggleTimeline(this)">
-          <div class="timeline-year">1900–1950</div>
-          <div class="timeline-desc">Industrialização e urbanização acelerada</div>
-          <div class="timeline-extra">São Paulo tornou-se o principal centro industrial do Brasil. Fábricas multiplicaram-se e a população cresceu exponencialmente. A cidade passou de 240 mil habitantes em 1900 para mais de 2 milhões em 1950, tornando-se a locomotiva econômica do país.</div>
-        </div>
-        <div class="timeline-item" onclick="toggleTimeline(this)">
-          <div class="timeline-year">Hoje</div>
-          <div class="timeline-desc">Metrópole global com mais de 22 milhões de habitantes</div>
-          <div class="timeline-extra">São Paulo é a maior cidade do Brasil e da América do Sul, e uma das maiores do mundo. É o maior centro financeiro e cultural do país, com um PIB equivalente ao de muitos países europeus. A cidade atrai turistas, investidores e trabalhadores de todo o mundo.</div>
-        </div>
-      </div>
+      <div class="timeline" id="timeline1"></div>
 
-      <!-- Section: Imigrantes -->
-      <div class="section-label" style="margin-top:2.5rem">DIVERSIDADE CULTURAL</div>
+      <!-- Imigrantes -->
+      <div class="section-label" style="margin-top:3rem;">DIVERSIDADE CULTURAL</div>
       <h3 class="section-heading">O Povo Paulistano</h3>
       <div class="divider"></div>
 
       <div class="section-grid">
         <div class="info-card">
           <h3>🇮🇹 Italianos</h3>
-          <p>Maior grupo de imigrantes. Trouxeram a culinária, especialmente a pizza. Bairros como Brás e Mooca têm forte herança italiana.</p>
+          <p>Maior grupo de imigrantes. Trouxeram a culinária, especialmente a pizza. Bairros como Brás, Bexiga e Mooca têm forte herança italiana.</p>
         </div>
         <div class="info-card">
           <h3>🇯🇵 Japoneses</h3>
-          <p>São Paulo tem a maior comunidade japonesa fora do Japão. O bairro da Liberdade é o centro dessa cultura.</p>
+          <p>São Paulo tem a maior comunidade japonesa fora do Japão. O bairro da Liberdade é o centro vibrante dessa cultura milenar.</p>
         </div>
         <div class="info-card">
           <h3>🇵🇹 Portugueses</h3>
-          <p>Os colonizadores fundadores deixaram a língua, a arquitetura colonial e muitos costumes que persistem até hoje.</p>
+          <p>Os colonizadores fundadores deixaram a língua, a arquitetura colonial e costumes que persistem na identidade paulistana.</p>
         </div>
         <div class="info-card">
-          <h3>🌍 Outros Povos</h3>
-          <p>Alemães, espanhóis, árabes, africanos, nordestinos e muitos outros construíram a identidade única e multicultural de São Paulo.</p>
+          <h3>🌍 Muitos Outros</h3>
+          <p>Alemães, espanhóis, árabes, africanos, nordestinos — todos construíram a identidade única e multicultural de São Paulo.</p>
         </div>
       </div>
 
-      <!-- Hotspot section -->
-      <div class="section-label" style="margin-top:2rem">MUSEU DO IPIRANGA</div>
-      <h3 class="section-heading">Símbolo da Independência</h3>
+      <!-- Hotspots no Museu do Ipiranga -->
+      <div class="section-label" style="margin-top:2.5rem;">EXPLORE O MUSEU</div>
+      <h3 class="section-heading">Museu do Ipiranga em Detalhes</h3>
       <div class="divider"></div>
-      <p class="lead-text">O Museu do Ipiranga (ou Museu Paulista) foi inaugurado em 1895 no local onde Dom Pedro I proclamou a Independência. Clique nos pontos para descobrir detalhes!</p>
+      <p class="lead-text">
+        O <strong style="color:var(--gold);">Museu do Ipiranga</strong> (Museu Paulista) é o 
+        museu histórico mais importante de São Paulo. Clique nos pontos numerados para 
+        descobrir curiosidades sobre este monumento!
+      </p>
 
-      <div class="hotspot-wrap" style="border-radius:8px; overflow:hidden;">
-        <div style="background: linear-gradient(135deg, #0D1F3C, #1A3A5C); padding:3rem 2rem; text-align:center; position:relative; min-height:200px; display:flex; align-items:center; justify-content:center;">
+      <div class="hotspot-wrap">
+        <div style="background: linear-gradient(135deg, #0D1F3C, #1A3A5C, #0A1525); padding: 3rem 2rem; text-align: center; position: relative; min-height: 300px; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
           <div style="text-align:center; position:relative; z-index:2;">
-            <div style="font-size:5rem; margin-bottom:1rem; opacity:0.8;">🏛</div>
-            <div style="font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--gold);">Museu do Ipiranga</div>
+            <div style="font-size:7rem; margin-bottom:1rem; filter:drop-shadow(0 8px 20px rgba(0,0,0,0.5));">🏛</div>
+            <div style="font-family:'Playfair Display',serif; font-size:1.4rem; color:var(--gold);">Museu do Ipiranga</div>
             <div style="font-size:0.85rem; color:var(--cream-dark); margin-top:0.5rem;">Fundado em 1895 — Reinaugurado em 2022</div>
           </div>
-          <!-- Hotspots -->
-          <div class="hotspot" style="top:20%; left:20%;" onclick="toggleHotspot(this)">
-            1
+          
+          <!-- Hotspot 1 -->
+          <div class="hotspot" style="top:18%; left:18%;" onclick="toggleHotspot(this, event)">
+            <span>1</span>
             <div class="hotspot-popup">
-              <span class="close-hs">×</span>
-              <h4>⚔ A Proclamação</h4>
-              <p>Em 7 de setembro de 1822, Dom Pedro I proclamou a Independência do Brasil às margens do Rio Ipiranga, rompendo com Portugal.</p>
+              <span class="close-hs" onclick="event.stopPropagation(); closeHotspot(this)">×</span>
+              <h4>⚔ A Independência</h4>
+              <p>Em 7 de setembro de 1822, Dom Pedro I proclamou a Independência do Brasil às margens do Rio Ipiranga, rompendo oficialmente os laços coloniais com Portugal.</p>
             </div>
           </div>
-          <div class="hotspot" style="top:20%; right:20%;" onclick="toggleHotspot(this)">
-            2
+          
+          <!-- Hotspot 2 -->
+          <div class="hotspot" style="top:25%; right:15%;" onclick="toggleHotspot(this, event)">
+            <span>2</span>
             <div class="hotspot-popup">
-              <span class="close-hs">×</span>
-              <h4>🎨 Acervo</h4>
-              <p>O museu guarda mais de 450 mil peças: pinturas históricas, mobílias, fotografias e documentos do Brasil colonial e imperial.</p>
+              <span class="close-hs" onclick="event.stopPropagation(); closeHotspot(this)">×</span>
+              <h4>🎨 Acervo Monumental</h4>
+              <p>O museu guarda mais de <strong>450 mil peças</strong>: pinturas históricas, mobílias do período colonial, fotografias raras e documentos do Brasil Imperial.</p>
             </div>
           </div>
-          <div class="hotspot" style="bottom:20%; left:50%; transform:translateX(-50%);" onclick="toggleHotspot(this)">
-            3
+          
+          <!-- Hotspot 3 -->
+          <div class="hotspot" style="bottom:15%; left:45%;" onclick="toggleHotspot(this, event)">
+            <span>3</span>
             <div class="hotspot-popup">
-              <span class="close-hs">×</span>
-              <h4>🌿 Parque</h4>
-              <p>O Parque da Independência ao redor do museu tem 160 mil m², com jardins, o Monumento à Independência e a Casa do Grito histórica.</p>
+              <span class="close-hs" onclick="event.stopPropagation(); closeHotspot(this)">×</span>
+              <h4>🌿 Parque da Independência</h4>
+              <p>O parque ao redor do museu tem <strong>160 mil m²</strong>, com jardins franceses, o Monumento à Independência e a histórica Casa do Grito.</p>
             </div>
           </div>
         </div>
@@ -1294,28 +2651,18 @@ body {
 
       <!-- QR Codes -->
       <div class="qr-section">
-        <div class="qr-title">📱 RECURSOS ADICIONAIS — QR CODES</div>
+        <div class="qr-title">📱 RECURSOS MULTIMÍDIA — QR CODES</div>
         <div class="qr-grid">
-          <div class="qr-item" onclick="showQRInfo('Documentário: A História de São Paulo', 'Conteúdo multimídia sobre a fundação e crescimento de São Paulo, dos jesuítas à metrópole moderna.')">
+          <div class="qr-item" onclick="showQRInfo('🎬 Documentário: A História de São Paulo', 'Conteúdo multimídia exclusivo sobre a fundação e o crescimento de São Paulo, dos jesuítas à metrópole moderna. Inclui entrevistas com historiadores.')">
             <div class="qr-box">
               <svg viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
-                <rect x="0" y="0" width="9" height="9" fill="#000"/>
-                <rect x="1" y="1" width="7" height="7" fill="#fff"/>
-                <rect x="2" y="2" width="5" height="5" fill="#000"/>
-                <rect x="12" y="0" width="9" height="9" fill="#000"/>
-                <rect x="13" y="1" width="7" height="7" fill="#fff"/>
-                <rect x="14" y="2" width="5" height="5" fill="#000"/>
-                <rect x="0" y="12" width="9" height="9" fill="#000"/>
-                <rect x="1" y="13" width="7" height="7" fill="#fff"/>
-                <rect x="2" y="14" width="5" height="5" fill="#000"/>
-                <rect x="11" y="10" width="2" height="2" fill="#000"/>
-                <rect x="14" y="10" width="2" height="2" fill="#000"/>
-                <rect x="17" y="10" width="4" height="2" fill="#000"/>
-                <rect x="11" y="13" width="3" height="2" fill="#000"/>
-                <rect x="15" y="13" width="6" height="2" fill="#000"/>
-                <rect x="11" y="16" width="2" height="5" fill="#000"/>
-                <rect x="14" y="17" width="7" height="2" fill="#000"/>
-                <rect x="19" y="14" width="2" height="3" fill="#000"/>
+                <rect x="0" y="0" width="9" height="9" fill="#000"/><rect x="1" y="1" width="7" height="7" fill="#fff"/><rect x="2" y="2" width="5" height="5" fill="#000"/>
+                <rect x="12" y="0" width="9" height="9" fill="#000"/><rect x="13" y="1" width="7" height="7" fill="#fff"/><rect x="14" y="2" width="5" height="5" fill="#000"/>
+                <rect x="0" y="12" width="9" height="9" fill="#000"/><rect x="1" y="13" width="7" height="7" fill="#fff"/><rect x="2" y="14" width="5" height="5" fill="#000"/>
+                <rect x="11" y="10" width="2" height="2" fill="#000"/><rect x="14" y="10" width="2" height="2" fill="#000"/>
+                <rect x="17" y="10" width="4" height="2" fill="#000"/><rect x="11" y="13" width="3" height="2" fill="#000"/>
+                <rect x="15" y="13" width="6" height="2" fill="#000"/><rect x="11" y="16" width="2" height="5" fill="#000"/>
+                <rect x="14" y="17" width="7" height="2" fill="#000"/><rect x="19" y="14" width="2" height="3" fill="#000"/>
               </svg>
             </div>
             <div class="qr-text">
@@ -1323,131 +2670,105 @@ body {
               <p>História completa da cidade desde 1554</p>
             </div>
           </div>
-          <div class="qr-item" onclick="showQRInfo('Tour Virtual: Museu do Ipiranga', 'Visite virtualmente o Museu do Ipiranga, recém-restaurado, com tour 360° pelos seus salões históricos.')">
+          <div class="qr-item" onclick="showQRInfo('🏛 Tour Virtual: Museu do Ipiranga', 'Visite virtualmente o Museu do Ipiranga recém-restaurado. Tour 360° pelos salões históricos com narração em português.')">
             <div class="qr-box">
               <svg viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
-                <rect x="0" y="0" width="9" height="9" fill="#000"/>
-                <rect x="1" y="1" width="7" height="7" fill="#fff"/>
-                <rect x="2" y="2" width="5" height="5" fill="#000"/>
-                <rect x="12" y="0" width="9" height="9" fill="#000"/>
-                <rect x="13" y="1" width="7" height="7" fill="#fff"/>
-                <rect x="14" y="2" width="5" height="5" fill="#000"/>
-                <rect x="0" y="12" width="9" height="9" fill="#000"/>
-                <rect x="1" y="13" width="7" height="7" fill="#fff"/>
-                <rect x="2" y="14" width="5" height="5" fill="#000"/>
-                <rect x="12" y="12" width="2" height="2" fill="#000"/>
-                <rect x="15" y="11" width="2" height="4" fill="#000"/>
-                <rect x="18" y="12" width="3" height="2" fill="#000"/>
-                <rect x="12" y="15" width="4" height="2" fill="#000"/>
-                <rect x="17" y="15" width="4" height="2" fill="#000"/>
-                <rect x="12" y="18" width="2" height="3" fill="#000"/>
+                <rect x="0" y="0" width="9" height="9" fill="#000"/><rect x="1" y="1" width="7" height="7" fill="#fff"/><rect x="2" y="2" width="5" height="5" fill="#000"/>
+                <rect x="12" y="0" width="9" height="9" fill="#000"/><rect x="13" y="1" width="7" height="7" fill="#fff"/><rect x="14" y="2" width="5" height="5" fill="#000"/>
+                <rect x="0" y="12" width="9" height="9" fill="#000"/><rect x="1" y="13" width="7" height="7" fill="#fff"/><rect x="2" y="14" width="5" height="5" fill="#000"/>
+                <rect x="12" y="12" width="2" height="2" fill="#000"/><rect x="15" y="11" width="2" height="4" fill="#000"/>
+                <rect x="18" y="12" width="3" height="2" fill="#000"/><rect x="12" y="15" width="4" height="2" fill="#000"/>
+                <rect x="17" y="15" width="4" height="2" fill="#000"/><rect x="12" y="18" width="2" height="3" fill="#000"/>
                 <rect x="16" y="18" width="5" height="3" fill="#000"/>
               </svg>
             </div>
             <div class="qr-text">
-              <h4>🏛 Tour Virtual</h4>
-              <p>Museu do Ipiranga — visita 360°</p>
+              <h4>🏛 Tour Virtual 360°</h4>
+              <p>Museu do Ipiranga restaurado</p>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Quiz -->
       <div id="quiz-room1"></div>
 
       <div class="room-nav-footer">
         <div></div>
-        <button class="nav-arrow" onclick="goRoom(2)">Próxima: Pontos Turísticos →</button>
+        <button class="nav-arrow next" onclick="goRoom(2)">Próxima Sala: Pontos Turísticos →</button>
       </div>
     </div>
   </div>
 
-  <!-- ══ SALA 2 ══ -->
+  <!-- ═══════════════════════════════════════
+       SALA 2 – PONTOS TURÍSTICOS
+       ═══════════════════════════════════════ -->
   <div id="room-2" class="room room-2">
     <div class="room-hero">
       <div class="room-hero-bg"></div>
+      <div class="room-hero-particles" id="heroParticles2"></div>
       <div class="room-deco">📍</div>
       <div class="room-hero-content">
         <div class="room-number">SALA 02 / 06</div>
         <h2 class="room-title">Pontos <span>Turísticos</span></h2>
       </div>
     </div>
+    
     <div class="room-content fade-in">
-      <div class="section-label">LUGARES MAIS VISITADOS</div>
-      <h3 class="section-heading">Explore São Paulo</h3>
+      <div class="section-label">LUGARES ICÔNICOS</div>
+      <h3 class="section-heading">Explore o Mapa de São Paulo</h3>
       <div class="divider"></div>
-      <p class="lead-text">São Paulo recebe milhões de turistas do mundo inteiro. Cada ponto turístico conta uma parte da história e da identidade paulistana. Clique nos pontos do mapa ou nas legendas para descobrir mais!</p>
+      <p class="lead-text">
+        São Paulo recebe <strong style="color:var(--gold);">mais de 15 milhões de turistas</strong> 
+        por ano. Cada ponto turístico conta uma parte da história e da identidade paulistana. 
+        Use o mapa interativo abaixo para descobrir cada local!
+      </p>
 
-      <!-- Interactive Map -->
+      <!-- Mapa Interativo -->
       <div class="map-container">
-        <div class="map-title">🗺 Mapa Interativo de São Paulo</div>
+        <div class="map-title">🗺 Mapa Interativo — Clique nos Pontos</div>
         <div class="map-svg-wrap">
-          <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
-            <!-- Map background -->
-            <rect width="600" height="400" fill="#0D1A2A" rx="8"/>
-            <!-- Streets grid (simplified) -->
-            <g stroke="#1A2E45" stroke-width="1.5" fill="none">
-              <line x1="0" y1="100" x2="600" y2="100"/>
-              <line x1="0" y1="200" x2="600" y2="200"/>
-              <line x1="0" y1="300" x2="600" y2="300"/>
-              <line x1="100" y1="0" x2="100" y2="400"/>
-              <line x1="200" y1="0" x2="200" y2="400"/>
-              <line x1="300" y1="0" x2="300" y2="400"/>
-              <line x1="400" y1="0" x2="400" y2="400"/>
-              <line x1="500" y1="0" x2="500" y2="400"/>
+          <svg viewBox="0 0 700 450" xmlns="http://www.w3.org/2000/svg">
+            <rect width="700" height="450" fill="#0D1520" rx="10"/>
+            <g stroke="#152535" stroke-width="1.5" fill="none">
+              <line x1="0" y1="120" x2="700" y2="120"/><line x1="0" y1="230" x2="700" y2="230"/>
+              <line x1="0" y1="340" x2="700" y2="340"/><line x1="120" y1="0" x2="120" y2="450"/>
+              <line x1="240" y1="0" x2="240" y2="450"/><line x1="360" y1="0" x2="360" y2="450"/>
+              <line x1="480" y1="0" x2="480" y2="450"/><line x1="600" y1="0" x2="600" y2="450"/>
             </g>
-            <!-- Diagonal roads -->
-            <g stroke="#1E3550" stroke-width="2.5" fill="none">
-              <line x1="50" y1="0" x2="400" y2="350"/>
-              <line x1="0" y1="150" x2="600" y2="50"/>
-              <line x1="150" y1="400" x2="600" y2="100"/>
+            <g stroke="#1C3045" stroke-width="2.5" fill="none">
+              <line x1="60" y1="0" x2="480" y2="420"/><line x1="0" y1="180" x2="700" y2="60"/>
+              <line x1="180" y1="450" x2="700" y2="120"/><line x1="0" y1="300" x2="550" y2="450"/>
             </g>
-            <!-- Park area -->
-            <ellipse cx="350" cy="270" rx="70" ry="50" fill="#0D3020" stroke="#1A5033" stroke-width="1.5"/>
-            <text x="350" y="274" text-anchor="middle" fill="#2E7D52" font-size="9" font-family="DM Sans">Parque</text>
-            <text x="350" y="284" text-anchor="middle" fill="#2E7D52" font-size="9" font-family="DM Sans">Ibirapuera</text>
-            <!-- Ipiranga area -->
-            <rect x="80" y="290" width="80" height="60" fill="#0D1F3C" rx="4" stroke="#1A3A5C" stroke-width="1"/>
-            <text x="120" y="325" text-anchor="middle" fill="#3A6090" font-size="8" font-family="DM Sans">Bairro</text>
-            <text x="120" y="335" text-anchor="middle" fill="#3A6090" font-size="8" font-family="DM Sans">Ipiranga</text>
+            <ellipse cx="420" cy="310" rx="80" ry="55" fill="#0D2A1A" stroke="#1A4D33" stroke-width="1.5"/>
+            <text x="420" y="315" text-anchor="middle" fill="#2E7D52" font-size="9" font-family="DM Sans">Parque</text>
+            <text x="420" y="328" text-anchor="middle" fill="#2E7D52" font-size="9" font-family="DM Sans">Ibirapuera</text>
+            <rect x="100" y="330" width="90" height="65" fill="#0D1F3C" rx="5" stroke="#1A3A5C" stroke-width="1"/>
+            <text x="145" y="365" text-anchor="middle" fill="#3A6090" font-size="9" font-family="DM Sans">Bairro do</text>
+            <text x="145" y="378" text-anchor="middle" fill="#3A6090" font-size="9" font-family="DM Sans">Ipiranga</text>
+            <text x="350" y="18" fill="#C9A84C" font-size="10" font-family="DM Sans" opacity="0.7">CENTRO HISTÓRICO</text>
 
-            <!-- CENTER marker label -->
-            <text x="285" y="16" fill="#C9A84C" font-size="9" font-family="DM Sans" opacity="0.7">CENTRO</text>
-
-            <!-- Map points -->
-            <!-- 1: Museu do Ipiranga -->
-            <g class="map-point" onclick="showMapInfo(1)" transform="translate(120, 310)">
-              <circle r="10" cx="0" cy="0"/>
-              <text x="0" y="4" text-anchor="middle" fill="#0D0D0D" font-size="9" font-weight="bold" font-family="DM Sans">1</text>
+            <!-- Pontos do mapa -->
+            <g class="map-point" onclick="showMapInfo(1)" transform="translate(145, 348)">
+              <circle r="12" cx="0" cy="0"/><text x="0" y="5" text-anchor="middle" fill="#0D0D0D" font-size="10" font-weight="bold" font-family="DM Sans">1</text>
             </g>
-            <!-- 2: Monumento Independência -->
-            <g class="map-point" onclick="showMapInfo(2)" transform="translate(155, 285)">
-              <circle r="10" cx="0" cy="0"/>
-              <text x="0" y="4" text-anchor="middle" fill="#0D0D0D" font-size="9" font-weight="bold" font-family="DM Sans">2</text>
+            <g class="map-point" onclick="showMapInfo(2)" transform="translate(180, 310)">
+              <circle r="12" cx="0" cy="0"/><text x="0" y="5" text-anchor="middle" fill="#0D0D0D" font-size="10" font-weight="bold" font-family="DM Sans">2</text>
             </g>
-            <!-- 3: Catedral da Sé -->
-            <g class="map-point" onclick="showMapInfo(3)" transform="translate(290, 195)">
-              <circle r="10" cx="0" cy="0"/>
-              <text x="0" y="4" text-anchor="middle" fill="#0D0D0D" font-size="9" font-weight="bold" font-family="DM Sans">3</text>
+            <g class="map-point" onclick="showMapInfo(3)" transform="translate(350, 225)">
+              <circle r="12" cx="0" cy="0"/><text x="0" y="5" text-anchor="middle" fill="#0D0D0D" font-size="10" font-weight="bold" font-family="DM Sans">3</text>
             </g>
-            <!-- 4: Ibirapuera -->
-            <g class="map-point" onclick="showMapInfo(4)" transform="translate(350, 270)">
-              <circle r="10" cx="0" cy="0"/>
-              <text x="0" y="4" text-anchor="middle" fill="#0D0D0D" font-size="9" font-weight="bold" font-family="DM Sans">4</text>
+            <g class="map-point" onclick="showMapInfo(4)" transform="translate(420, 310)">
+              <circle r="12" cx="0" cy="0"/><text x="0" y="5" text-anchor="middle" fill="#0D0D0D" font-size="10" font-weight="bold" font-family="DM Sans">4</text>
             </g>
-            <!-- 5: Bairro Liberdade -->
-            <g class="map-point" onclick="showMapInfo(5)" transform="translate(245, 230)">
-              <circle r="10" cx="0" cy="0"/>
-              <text x="0" y="4" text-anchor="middle" fill="#0D0D0D" font-size="9" font-weight="bold" font-family="DM Sans">5</text>
+            <g class="map-point" onclick="showMapInfo(5)" transform="translate(300, 265)">
+              <circle r="12" cx="0" cy="0"/><text x="0" y="5" text-anchor="middle" fill="#0D0D0D" font-size="10" font-weight="bold" font-family="DM Sans">5</text>
             </g>
-            <!-- Zoom hint -->
-            <text x="580" y="390" text-anchor="end" fill="#C9A84C" font-size="8" font-family="DM Sans" opacity="0.5">SP — simplificado</text>
           </svg>
         </div>
 
         <div class="map-info" id="map-info-box">
-          <h4>👆 Clique em um ponto no mapa</h4>
-          <p>Selecione um dos 5 pontos turísticos para ver informações detalhadas sobre o local.</p>
+          <h4>👆 Clique em um ponto numerado no mapa</h4>
+          <p>Selecione qualquer um dos 5 pontos turísticos destacados para ver informações detalhadas sobre cada local histórico e cultural.</p>
         </div>
 
         <div class="map-legend">
@@ -1459,136 +2780,119 @@ body {
         </div>
       </div>
 
-      <!-- Cards -->
-      <div class="section-label" style="margin-top:2rem">IMPORTÂNCIA CULTURAL</div>
-      <h3 class="section-heading">Por que preservar?</h3>
-      <div class="divider"></div>
-
       <div class="section-grid">
         <div class="info-card">
           <h3>🌍 Turismo Internacional</h3>
-          <p>São Paulo recebe mais de 15 milhões de turistas por ano. Os pontos históricos são o principal atrativo para visitantes de todo o mundo que querem conhecer a cultura e identidade brasileira.</p>
+          <p>São Paulo recebe mais de <strong>15 milhões de turistas</strong> por ano. Os pontos históricos são o principal atrativo para visitantes de todo o mundo que buscam conhecer a cultura e identidade brasileira.</p>
         </div>
         <div class="info-card">
           <h3>🏛 Memória Coletiva</h3>
-          <p>Preservar monumentos e espaços históricos significa manter viva a memória de um povo. Sem esses locais, gerações futuras perderiam o contato com suas raízes.</p>
+          <p>Preservar monumentos e espaços históricos significa manter viva a memória de um povo. Sem esses locais, gerações futuras perderiam o contato com suas raízes e identidade.</p>
         </div>
         <div class="info-card">
           <h3>💰 Economia Local</h3>
-          <p>O turismo gera milhões de empregos na cidade: guias, hotéis, restaurantes, artesãos. Preservar os atrativos culturais é também sustentar a economia local.</p>
-        </div>
-      </div>
-
-      <div class="qr-section">
-        <div class="qr-title">📱 SAIBA MAIS</div>
-        <div class="qr-grid">
-          <div class="qr-item" onclick="showQRInfo('Visita Virtual: Parque Ibirapuera', 'Explore o maior parque de São Paulo em um tour interativo com informações sobre fauna, flora e espaços culturais.')">
-            <div class="qr-box">
-              <svg viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
-                <rect x="0" y="0" width="9" height="9" fill="#000"/><rect x="1" y="1" width="7" height="7" fill="#fff"/><rect x="2" y="2" width="5" height="5" fill="#000"/>
-                <rect x="12" y="0" width="9" height="9" fill="#000"/><rect x="13" y="1" width="7" height="7" fill="#fff"/><rect x="14" y="2" width="5" height="5" fill="#000"/>
-                <rect x="0" y="12" width="9" height="9" fill="#000"/><rect x="1" y="13" width="7" height="7" fill="#fff"/><rect x="2" y="14" width="5" height="5" fill="#000"/>
-                <rect x="11" y="11" width="3" height="3" fill="#000"/><rect x="15" y="11" width="2" height="2" fill="#000"/><rect x="18" y="12" width="3" height="2" fill="#000"/>
-                <rect x="11" y="15" width="5" height="2" fill="#000"/><rect x="17" y="14" width="4" height="4" fill="#000"/>
-                <rect x="11" y="18" width="3" height="3" fill="#000"/><rect x="15" y="17" width="2" height="4" fill="#000"/>
-              </svg>
-            </div>
-            <div class="qr-text">
-              <h4>🌳 Parque Ibirapuera</h4>
-              <p>Tour virtual e curiosidades sobre o parque</p>
-            </div>
-          </div>
-          <div class="qr-item" onclick="showQRInfo('Catedral da Sé — Guia de Visitação', 'História completa da Catedral Metropolitana de São Paulo, inaugurada em 1954, com fotos de seu interior gótico.')">
-            <div class="qr-box">
-              <svg viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
-                <rect x="0" y="0" width="9" height="9" fill="#000"/><rect x="1" y="1" width="7" height="7" fill="#fff"/><rect x="2" y="2" width="5" height="5" fill="#000"/>
-                <rect x="12" y="0" width="9" height="9" fill="#000"/><rect x="13" y="1" width="7" height="7" fill="#fff"/><rect x="14" y="2" width="5" height="5" fill="#000"/>
-                <rect x="0" y="12" width="9" height="9" fill="#000"/><rect x="1" y="13" width="7" height="7" fill="#fff"/><rect x="2" y="14" width="5" height="5" fill="#000"/>
-                <rect x="12" y="12" width="9" height="9" fill="#000"/><rect x="13" y="13" width="7" height="7" fill="#fff"/><rect x="14" y="14" width="5" height="5" fill="#000"/>
-              </svg>
-            </div>
-            <div class="qr-text">
-              <h4>⛪ Catedral da Sé</h4>
-              <p>História e arquitetura gótica da catedral</p>
-            </div>
-          </div>
+          <p>O turismo gera <strong>milhões de empregos</strong> na cidade: guias turísticos, hotéis, restaurantes, artesãos e comércio local. Preservar os atrativos culturais é também sustentar a economia.</p>
         </div>
       </div>
 
       <div id="quiz-room2"></div>
 
       <div class="room-nav-footer">
-        <button class="nav-arrow" onclick="goRoom(1)">← Sala 1: História</button>
-        <button class="nav-arrow" onclick="goRoom(3)">Próxima: Cultura →</button>
+        <button class="nav-arrow prev" onclick="goRoom(1)">← Sala 1: História</button>
+        <button class="nav-arrow next" onclick="goRoom(3)">Próxima Sala: Cultura →</button>
       </div>
     </div>
   </div>
 
-  <!-- ══ SALA 3 ══ -->
+  <!-- ═══════════════════════════════════════
+       SALA 3 – CULTURA E TRADIÇÕES
+       ═══════════════════════════════════════ -->
   <div id="room-3" class="room room-3">
     <div class="room-hero">
       <div class="room-hero-bg"></div>
+      <div class="room-hero-particles" id="heroParticles3"></div>
       <div class="room-deco">🎭</div>
       <div class="room-hero-content">
         <div class="room-number">SALA 03 / 06</div>
         <h2 class="room-title">Cultura &<br><span>Tradições</span></h2>
       </div>
     </div>
+    
     <div class="room-content fade-in">
-      <div class="section-label">IDENTIDADE CULTURAL</div>
-      <h3 class="section-heading">A Alma Paulistana</h3>
+      <div class="section-label">IDENTIDADE CULTURAL PAULISTANA</div>
+      <h3 class="section-heading">A Alma de São Paulo</h3>
       <div class="divider"></div>
-      <p class="lead-text">São Paulo é uma cidade extremamente movimentada e multicultural — uma mistura única de diferentes povos, tradições e influências que criaram uma identidade cultural singular. Clique nos cartões para explorar cada elemento!</p>
+      <p class="lead-text">
+        São Paulo é uma cidade extremamente movimentada e multicultural — uma mistura 
+        única de diferentes povos, tradições e influências que criaram uma identidade 
+        cultural singular. <strong style="color:var(--gold);">Clique nos cartões</strong> 
+        para explorar cada elemento!
+      </p>
 
+      <!-- Culture Cards -->
       <div class="culture-grid">
         <div class="culture-card" onclick="toggleCulture(this)">
           <div class="culture-icon">🎉</div>
           <h3>Carnaval Paulistano</h3>
           <p>Um dos maiores do Brasil, com desfiles de escolas de samba no Sambódromo do Anhembi.</p>
-          <div class="culture-detail">O Carnaval de SP acontece no Sambódromo do Anhembi e apresenta escolas de samba de nível nacional. Diferente do Rio, o SP tem um estilo próprio com alegorias monumentais e enredos densos. O SPFW (São Paulo Fashion Week) também ocorre durante o período, misturando moda e cultura carnavalesca.</div>
+          <div class="culture-detail">
+            O Carnaval de SP acontece no Sambódromo do Anhembi e apresenta escolas de samba de nível nacional. Diferente do Rio, SP tem um estilo próprio com alegorias monumentais e enredos densos. O evento atrai mais de <strong>300 mil pessoas</strong> por noite de desfile.
+          </div>
         </div>
         <div class="culture-card" onclick="toggleCulture(this)">
           <div class="culture-icon">🇧🇷</div>
-          <h3>7 de Setembro</h3>
-          <p>A Festa da Independência no Parque da Independência, onde tudo começou em 1822.</p>
-          <div class="culture-detail">Todo 7 de setembro, o Parque da Independência no bairro do Ipiranga recebe milhares de pessoas para celebrar a data que foi proclamada no mesmo local. Há paradas militares, shows culturais e apresentações históricas. É uma celebração que conecta o presente ao momento fundador do Brasil.</div>
+          <h3>Festa da Independência</h3>
+          <p>Celebração de 7 de setembro no Parque da Independência, onde tudo começou em 1822.</p>
+          <div class="culture-detail">
+            Todo 7 de setembro, o Parque da Independência no Ipiranga recebe milhares de pessoas para celebrar a data. Há paradas militares, shows culturais e apresentações históricas que conectam o presente ao momento fundador do Brasil como nação independente.
+          </div>
         </div>
         <div class="culture-card" onclick="toggleCulture(this)">
           <div class="culture-icon">🍕</div>
           <h3>Pizza Paulistana</h3>
-          <p>SP tem mais pizzarias per capita que Nápoles, Itália. A pizza é parte da identidade da cidade!</p>
-          <div class="culture-detail">Os imigrantes italianos trouxeram a pizza para SP no início do século XX. Com o tempo, a culinária paulistana desenvolveu seu próprio estilo: massa mais fina, recheios generosos e uma variedade enorme de sabores. São Paulo tem mais de 6.000 pizzarias — mais do que qualquer cidade italiana.</div>
+          <p>SP tem mais pizzarias per capita que Nápoles. A pizza é patrimônio cultural da cidade!</p>
+          <div class="culture-detail">
+            Os imigrantes italianos trouxeram a pizza para SP no início do século XX. Hoje, São Paulo tem <strong>mais de 6.000 pizzarias</strong> — mais do que qualquer cidade italiana. A pizza paulistana desenvolveu seu próprio estilo: massa fina, recheios generosos e variedade imensa de sabores.
+          </div>
         </div>
         <div class="culture-card" onclick="toggleCulture(this)">
           <div class="culture-icon">🥪</div>
-          <h3>Mortadela do Mercadão</h3>
-          <p>O sanduíche de mortadela do Mercado Municipal é um símbolo gastronômico de SP.</p>
-          <div class="culture-detail">O Mercado Municipal de São Paulo (Mercadão) é famoso pelo seu sanduíche de mortadela artesanal — considerado um patrimônio gastronômico da cidade. Aberto desde 1933, o mercado vende produtos de todo o Brasil e do mundo, sendo um ponto turístico obrigatório.</div>
+          <h3>Sanduíche de Mortadela</h3>
+          <p>O sanduíche do Mercado Municipal é um ícone gastronômico de São Paulo.</p>
+          <div class="culture-detail">
+            O Mercado Municipal de São Paulo (Mercadão), aberto desde 1933, é famoso pelo seu sanduíche de mortadela artesanal — considerado <strong>patrimônio gastronômico</strong> da cidade. Uma única lanchonete vende mais de 1.500 sanduíches por dia.
+          </div>
         </div>
         <div class="culture-card" onclick="toggleCulture(this)">
           <div class="culture-icon">🎵</div>
-          <h3>Samba & Rap</h3>
+          <h3>Samba & Rap Paulista</h3>
           <p>Do samba tradicional ao rap das periferias, SP é um celeiro musical extraordinário.</p>
-          <div class="culture-detail">São Paulo é o berço do rap nacional. Grupos como Racionais MC's surgiram nas periferias paulistanas e hoje são reconhecidos mundialmente. Ao mesmo tempo, o samba paulistano tem suas próprias escolas e tradições. A cidade é palco de festivais internacionais de música, do Lollapalooza ao Rock in Rio SP.</div>
+          <div class="culture-detail">
+            São Paulo é berço do <strong>rap nacional</strong>. Grupos como Racionais MC's surgiram nas periferias e são reconhecidos mundialmente. Paralelamente, o samba paulistano tem tradição própria. A cidade sedia festivais como Lollapalooza e Rock in Rio.
+          </div>
         </div>
         <div class="culture-card" onclick="toggleCulture(this)">
           <div class="culture-icon">🎨</div>
           <h3>Grafite & Arte Urbana</h3>
-          <p>SP tem a maior concentração de arte urbana do mundo. O grafite paulistano é reconhecido internacionalmente.</p>
-          <div class="culture-detail">O Beco do Batman no bairro de Vila Madalena é o símbolo do grafite paulistano. Artistas como Os Gêmeos e Eduardo Kobra tornaram a arte de rua da cidade reconhecida mundialmente. São Paulo foi pioneira na legalização e valorização do grafite como arte, transformando muros e viadutos em galerias a céu aberto.</div>
+          <p>SP tem a maior concentração de arte urbana do mundo. O grafite é reconhecido internacionalmente.</p>
+          <div class="culture-detail">
+            O <strong>Beco do Batman</strong> na Vila Madalena é o símbolo do grafite paulistano. Artistas como Os Gêmeos e Eduardo Kobra tornaram a arte de rua da cidade famosa mundialmente, transformando muros em galerias a céu aberto.
+          </div>
         </div>
       </div>
 
       <!-- Interactive Question -->
       <div class="interactive-q">
         <h3>🤔 Pergunta Interativa</h3>
-        <p style="color:var(--cream-dark); font-size:0.9rem; margin-bottom:1.2rem;">"Qual tradição paulistana você mais gostaria de conhecer?"</p>
+        <p style="color:var(--cream-dark); font-size:0.95rem; margin-bottom:1.5rem;">
+          "Qual tradição paulistana você mais gostaria de conhecer ou vivenciar?"
+        </p>
         <div class="tradition-options">
-          <button class="trad-btn" onclick="selectTrad(this, 'O Carnaval de SP é uma das maiores festas do mundo! As escolas de samba paulistanas apresentam espetáculos inesquecíveis de fantasia, música e dança.')">🎉 Carnaval</button>
-          <button class="trad-btn" onclick="selectTrad(this, 'A pizza paulistana é única! SP tem mais de 6.000 pizzarias e uma tradição gastronômica que mistura herança italiana com criatividade brasileira.')">🍕 Gastronomia</button>
-          <button class="trad-btn" onclick="selectTrad(this, 'O rap paulistano mudou a música brasileira! Os Racionais MC\'s e outros artistas contam a história real das periferias de SP com letras poderosas.')">🎵 Música</button>
-          <button class="trad-btn" onclick="selectTrad(this, 'O grafite paulistano é famoso no mundo todo! O Beco do Batman e os murais gigantes de Eduardo Kobra transformam a cidade em um museu a céu aberto.')">🎨 Grafite</button>
-          <button class="trad-btn" onclick="selectTrad(this, 'A Festa da Independência no Parque do Ipiranga conecta SP ao momento mais importante da história do Brasil. Uma celebração única que acontece exatamente onde a história foi feita!')">🇧🇷 7 de Setembro</button>
+          <button class="trad-btn" onclick="selectTrad(this, 'O Carnaval de SP é uma das maiores festas do mundo! As escolas de samba paulistanas apresentam espetáculos inesquecíveis de fantasia, música e dança no Sambódromo do Anhembi.')">🎉 Carnaval</button>
+          <button class="trad-btn" onclick="selectTrad(this, 'A pizza paulistana é única no mundo! SP tem mais de 6.000 pizzarias e uma tradição gastronômica que mistura herança italiana com criatividade brasileira.')">🍕 Gastronomia</button>
+          <button class="trad-btn" onclick="selectTrad(this, 'O rap paulistano mudou a música brasileira! Os Racionais MCs e outros artistas contam a história das periferias de SP com letras poderosas e reconhecimento internacional.')">🎵 Música</button>
+          <button class="trad-btn" onclick="selectTrad(this, 'O grafite de SP é famoso no mundo todo! O Beco do Batman e os murais de Eduardo Kobra transformam a cidade em um museu a céu aberto.')">🎨 Grafite</button>
+          <button class="trad-btn" onclick="selectTrad(this, 'A Festa da Independência no Parque do Ipiranga conecta SP ao momento mais importante da história do Brasil, exatamente onde a Independência foi proclamada em 1822!')">🇧🇷 7 de Setembro</button>
         </div>
         <div id="trad-response"></div>
       </div>
@@ -1596,75 +2900,102 @@ body {
       <div id="quiz-room3"></div>
 
       <div class="room-nav-footer">
-        <button class="nav-arrow" onclick="goRoom(2)">← Sala 2: Turismo</button>
-        <button class="nav-arrow" onclick="goRoom(4)">Próxima: Impactos →</button>
+        <button class="nav-arrow prev" onclick="goRoom(2)">← Sala 2: Turismo</button>
+        <button class="nav-arrow next" onclick="goRoom(4)">Próxima Sala: Impactos Ambientais →</button>
       </div>
     </div>
   </div>
 
-  <!-- ══ SALA 4 ══ -->
+  <!-- ═══════════════════════════════════════
+       SALA 4 – IMPACTOS AMBIENTAIS
+       ═══════════════════════════════════════ -->
   <div id="room-4" class="room room-4">
     <div class="room-hero">
       <div class="room-hero-bg"></div>
+      <div class="room-hero-particles" id="heroParticles4"></div>
       <div class="room-deco">🌿</div>
       <div class="room-hero-content">
         <div class="room-number">SALA 04 / 06</div>
         <h2 class="room-title">Impactos <span>Ambientais</span><br>do Turismo</h2>
       </div>
     </div>
+    
     <div class="room-content fade-in">
       <div class="section-label">CONSEQUÊNCIAS AMBIENTAIS</div>
-      <h3 class="section-heading">O Custo do Turismo</h3>
+      <h3 class="section-heading">O Preço do Turismo no Meio Ambiente</h3>
       <div class="divider"></div>
-      <p class="lead-text">O turismo traz benefícios econômicos, mas também impõe custos ambientais significativos. Em São Paulo, como em outras grandes metrópoles, esses impactos precisam ser monitorados e mitigados para garantir a sustentabilidade da cidade.</p>
+      <p class="lead-text">
+        O turismo traz benefícios econômicos inegáveis, mas também impõe custos ambientais 
+        significativos. Em São Paulo, como em outras grandes metrópoles mundiais, esses 
+        impactos precisam ser monitorados e mitigados.
+      </p>
 
       <!-- Impact Bars -->
       <div class="impact-section">
-        <div class="impact-title">⚠ Medidor de Impactos — Clique para detalhes</div>
+        <div class="impact-title">⚠️ Medidor de Impactos Ambientais — Clique nas barras para detalhes</div>
 
         <div class="impact-bar-wrap" onclick="toggleImpact(this)">
           <div class="impact-label">
             <span>💨 Poluição do Ar</span>
-            <span style="color:#E74C3C">Alto</span>
+            <span style="color:#E74C3C; font-weight:600;">ALTO</span>
           </div>
           <div class="impact-bar"><div class="impact-fill" data-width="82"></div></div>
-          <div class="impact-detail-text">O aumento do turismo leva a mais veículos nas ruas, mais aviões e mais emissões industriais para abastecer os visitantes. Em SP, o número de carros de aluguel e ônibus turísticos nas ruas do centro histórico contribui significativamente para a poluição do ar, prejudicando tanto moradores quanto os próprios turistas.</div>
+          <div class="impact-detail-text">
+            O aumento do turismo leva a mais veículos nas ruas, mais voos e mais emissões. 
+            Em SP, carros de aluguel e ônibus turísticos no centro histórico contribuem 
+            significativamente para a poluição do ar, afetando tanto moradores quanto visitantes.
+          </div>
         </div>
 
         <div class="impact-bar-wrap" onclick="toggleImpact(this)">
           <div class="impact-label">
             <span>🗑 Geração de Lixo</span>
-            <span style="color:#E74C3C">Muito Alto</span>
+            <span style="color:#E74C3C; font-weight:600;">MUITO ALTO</span>
           </div>
           <div class="impact-bar"><div class="impact-fill" data-width="90"></div></div>
-          <div class="impact-detail-text">Áreas turísticas geram muito mais lixo do que áreas residenciais. Embalagens descartáveis, resíduos de alimentação e plásticos aumentam drasticamente. No Parque Ibirapuera, por exemplo, nos dias de maior visitação, a quantidade de lixo coletado pode ser três vezes maior do que em dias normais.</div>
+          <div class="impact-detail-text">
+            Áreas turísticas geram muito mais lixo. No Parque Ibirapuera, em dias de pico, 
+            a quantidade de lixo coletado pode ser <strong>três vezes maior</strong> que em dias normais. 
+            Embalagens descartáveis, resíduos de alimentação e plásticos se acumulam.
+          </div>
         </div>
 
         <div class="impact-bar-wrap" onclick="toggleImpact(this)">
           <div class="impact-label">
             <span>💧 Consumo de Água</span>
-            <span style="color:#E67E22">Moderado-Alto</span>
+            <span style="color:#E67E22; font-weight:600;">MODERADO-ALTO</span>
           </div>
-          <div class="impact-bar"><div class="impact-fill" data-width="65"></div></div>
-          <div class="impact-detail-text">Hotéis, restaurantes e parques turísticos consomem grandes quantidades de água. Em SP, uma cidade que já enfrenta desafios hídricos, esse consumo adicional pressiona os reservatórios. Um único hotel de médio porte pode consumir o equivalente a 300 residências por dia.</div>
+          <div class="impact-bar"><div class="impact-fill" data-width="68"></div></div>
+          <div class="impact-detail-text">
+            Hotéis, restaurantes e parques turísticos consomem enormes quantidades de água. 
+            Um único hotel de médio porte pode consumir o equivalente a <strong>300 residências</strong> 
+            por dia, pressionando os já sobrecarregados reservatórios da região metropolitana.
+          </div>
         </div>
 
         <div class="impact-bar-wrap" onclick="toggleImpact(this)">
           <div class="impact-label">
             <span>⚡ Consumo de Energia</span>
-            <span style="color:#E67E22">Moderado-Alto</span>
+            <span style="color:#E67E22; font-weight:600;">MODERADO-ALTO</span>
           </div>
-          <div class="impact-bar"><div class="impact-fill" data-width="70"></div></div>
-          <div class="impact-detail-text">A infraestrutura turística — hotéis com ar-condicionado 24h, iluminação de monumentos, shopping centers — é extremamente intensiva em energia. Isso aumenta a pegada de carbono da cidade e pressiona o sistema elétrico, especialmente nos picos de verão.</div>
+          <div class="impact-bar"><div class="impact-fill" data-width="72"></div></div>
+          <div class="impact-detail-text">
+            Infraestrutura turística — hotéis com ar-condicionado 24h, iluminação de monumentos, 
+            shoppings — é intensiva em energia. Isso aumenta a pegada de carbono da cidade.
+          </div>
         </div>
 
         <div class="impact-bar-wrap" onclick="toggleImpact(this)">
           <div class="impact-label">
             <span>🌳 Degradação de Áreas Verdes</span>
-            <span style="color:#E74C3C">Alto</span>
+            <span style="color:#E74C3C; font-weight:600;">ALTO</span>
           </div>
-          <div class="impact-bar"><div class="impact-fill" data-width="75"></div></div>
-          <div class="impact-detail-text">O excesso de visitantes em parques e áreas verdes causa compactação do solo, pisoteio de vegetação e perturbação da fauna. No Parque Estadual da Cantareira, por exemplo, trilhas mal gerenciadas levaram à erosão de várias áreas antes preservadas.</div>
+          <div class="impact-bar"><div class="impact-fill" data-width="76"></div></div>
+          <div class="impact-detail-text">
+            O excesso de visitantes em parques causa compactação do solo, pisoteio de vegetação 
+            e perturbação da fauna. No Parque Estadual da Cantareira, trilhas mal gerenciadas 
+            levaram à erosão de áreas antes preservadas.
+          </div>
         </div>
       </div>
 
@@ -1675,111 +3006,138 @@ body {
             <li>+15 milhões de turistas/ano em SP</li>
             <li>+40% de lixo em zonas turísticas</li>
             <li>+25% de consumo de água nos bairros turísticos</li>
-            <li>Emissão de CO₂ do turismo: 8% do total global</li>
+            <li>Turismo global: 8% das emissões de CO₂</li>
+            <li>1 hotel médio = 300 casas em consumo de água</li>
           </ul>
         </div>
         <div class="info-card">
-          <h3>🔍 O que podemos fazer?</h3>
-          <p>Reconhecer os impactos é o primeiro passo. A Sala 6 apresenta soluções concretas para um turismo mais sustentável em São Paulo. Continue explorando o museu!</p>
+          <h3>🔍 O Que Podemos Fazer?</h3>
+          <p>Reconhecer os impactos é o <strong>primeiro passo</strong>. A Sala 6 apresenta soluções concretas para um turismo mais sustentável em São Paulo. Continue explorando o museu para descobrir como equilibrar turismo e preservação!</p>
         </div>
       </div>
 
       <div id="quiz-room4"></div>
 
       <div class="room-nav-footer">
-        <button class="nav-arrow" onclick="goRoom(3)">← Sala 3: Cultura</button>
-        <button class="nav-arrow" onclick="goRoom(5)">Próxima: Problemas →</button>
+        <button class="nav-arrow prev" onclick="goRoom(3)">← Sala 3: Cultura</button>
+        <button class="nav-arrow next" onclick="goRoom(5)">Próxima Sala: Problemas →</button>
       </div>
     </div>
   </div>
 
-  <!-- ══ SALA 5 ══ -->
+  <!-- ═══════════════════════════════════════
+       SALA 5 – PROBLEMAS DO TURISMO
+       ═══════════════════════════════════════ -->
   <div id="room-5" class="room room-5">
     <div class="room-hero">
       <div class="room-hero-bg"></div>
+      <div class="room-hero-particles" id="heroParticles5"></div>
       <div class="room-deco">⚠</div>
       <div class="room-hero-content">
         <div class="room-number">SALA 05 / 06</div>
         <h2 class="room-title">Problemas<br>do <span>Turismo</span></h2>
       </div>
     </div>
+    
     <div class="room-content fade-in">
       <div class="section-label">CONSEQUÊNCIAS NEGATIVAS</div>
       <h3 class="section-heading">Quando o Turismo Vai Longe Demais</h3>
       <div class="divider"></div>
-      <p class="lead-text">O turismo em excesso pode gerar problemas sérios para os moradores e para a identidade das cidades. Esse fenômeno, chamado de "overtourism", afeta cidades ao redor do mundo — e São Paulo não está imune a ele.</p>
+      <p class="lead-text">
+        O turismo em excesso — fenômeno conhecido como <strong style="color:var(--orange);">"overtourism"</strong> — 
+        pode gerar problemas sérios para os moradores e para a identidade das cidades. 
+        São Paulo, como grande metrópole turística, enfrenta estes desafios diariamente.
+      </p>
 
-      <div class="problem-item" onclick="this.style.background='rgba(230,126,34,0.2)'">
+      <div class="problem-item">
         <div class="problem-icon">🚶</div>
         <div>
-          <h4>Superlotação dos Espaços</h4>
-          <p>Lugares turísticos ficam lotados em feriados e fins de semana, dificultando o acesso e o desfrute tanto para turistas quanto para moradores. Parques como o Ibirapuera chegam a receber 100 mil pessoas em um único dia.</p>
+          <h4>Superlotação dos Espaços Públicos</h4>
+          <p>Lugares turísticos ficam lotados em feriados e fins de semana, dificultando o acesso tanto para turistas quanto para moradores. O Parque Ibirapuera chega a receber <strong>100 mil pessoas</strong> em um único dia de sol.</p>
         </div>
       </div>
 
-      <div class="problem-item" onclick="this.style.background='rgba(230,126,34,0.2)'">
+      <div class="problem-item">
         <div class="problem-icon">🚗</div>
         <div>
-          <h4>Dificuldade de Circulação</h4>
-          <p>O aumento do fluxo de turistas em bairros históricos cria engarrafamentos e dificulta o transporte dos moradores locais. No centro histórico de SP, o trânsito nos dias de turismo intenso pode triplicar.</p>
+          <h4>Dificuldade de Circulação dos Moradores</h4>
+          <p>O aumento do fluxo de turistas em bairros históricos cria engarrafamentos e dificulta o transporte dos moradores locais. No centro histórico, o trânsito em dias de pico turístico pode <strong>triplicar</strong>.</p>
         </div>
       </div>
 
-      <div class="problem-item" onclick="this.style.background='rgba(230,126,34,0.2)'">
+      <div class="problem-item">
         <div class="problem-icon">🗑</div>
         <div>
-          <h4>Lixo em Parques e Ruas</h4>
-          <p>O volume de resíduos em áreas turísticas sobrecarrega os sistemas de coleta. Muitos visitantes não seguem as regras de descarte, deixando lixo em parques, praças e monumentos históricos.</p>
+          <h4>Aumento Exponencial de Lixo</h4>
+          <p>O volume de resíduos em áreas turísticas sobrecarrega os sistemas de coleta. Muitos visitantes não descartam corretamente, deixando lixo em parques, praças e monumentos históricos.</p>
         </div>
       </div>
 
-      <div class="problem-item" onclick="this.style.background='rgba(230,126,34,0.2)'">
+      <div class="problem-item">
         <div class="problem-icon">🏘</div>
         <div>
-          <h4>Descaracterização de Bairros</h4>
-          <p>Talvez o problema mais grave: bairros históricos mudam sua cara para agradar turistas. Lojas tradicionais fecham e abrem souvenir shops. Os preços sobem e os moradores originais são forçados a se mudar — fenômeno chamado de "gentrificação".</p>
+          <h4>Descaracterização de Bairros Históricos</h4>
+          <p>Talvez o problema mais grave: bairros mudam para agradar turistas. Lojas tradicionais fecham para dar lugar a souvenir shops. Os preços sobem e moradores originais são forçados a se mudar — fenômeno chamado de <strong style="color:#FAD7A0;">gentrificação</strong>.</p>
         </div>
       </div>
 
-      <div class="problem-item" onclick="this.style.background='rgba(230,126,34,0.2)'">
+      <div class="problem-item">
         <div class="problem-icon">💸</div>
         <div>
-          <h4>Aumento do Custo de Vida</h4>
-          <p>Com o turismo, os preços de aluguel, alimentação e serviços sobem nos bairros turísticos. Isso afeta diretamente os moradores de baixa renda, que muitas vezes precisam abandonar bairros onde viveram por gerações.</p>
+          <h4>Aumento do Custo de Vida Local</h4>
+          <p>Com o turismo intenso, aluguéis, alimentação e serviços sobem nos bairros turísticos. Moradores de baixa renda são os mais afetados, muitas vezes precisando abandonar bairros onde viveram por gerações.</p>
         </div>
       </div>
 
-      <!-- Case Study -->
-      <div style="background:rgba(139,69,19,0.12); border:1px solid rgba(139,69,19,0.3); border-radius:6px; padding:1.8rem; margin:2rem 0;">
+      <!-- Estudo de Caso -->
+      <div style="background:rgba(139,69,19,0.1); border:1px solid rgba(139,69,19,0.25); border-radius:10px; padding:2.5rem; margin:2.5rem 0;">
         <div class="section-label">ESTUDO DE CASO</div>
-        <h3 style="font-family:'Playfair Display',serif; color:#F0B27A; font-size:1.2rem; margin-bottom:0.8rem;">O Bairro da Liberdade e a Identidade Japonesa</h3>
-        <p style="font-size:0.9rem; color:var(--cream-dark); line-height:1.7;">O bairro da Liberdade em SP, historicamente japonês, passou por transformações significativas com o crescimento do turismo. Lojas tradicionais japonesas foram substituídas por estabelecimentos mais voltados ao turismo, nem sempre autênticos. Ao mesmo tempo, o turismo ajudou a <em style="color:#F0B27A">preservar</em> algumas práticas culturais que poderiam ter sido perdidas sem essa exposição. Este é um exemplo perfeito do dilema central do museu: o turismo valoriza ou transforma a identidade?</p>
+        <h3 style="font-family:'Playfair Display',serif; color:#F0B27A; font-size:1.4rem; margin-bottom:1rem;">O Bairro da Liberdade e a Identidade Japonesa</h3>
+        <p style="font-size:0.95rem; color:var(--cream-dark); line-height:1.8;">
+          O bairro da Liberdade, historicamente o coração da comunidade japonesa em São Paulo, 
+          passou por transformações significativas com o crescimento do turismo. Lojas 
+          tradicionais japonesas foram substituídas por estabelecimentos voltados ao turismo, 
+          nem sempre autênticos. Ao mesmo tempo, o turismo ajudou a 
+          <em style="color:#F0B27A;">preservar</em> algumas práticas culturais que poderiam 
+          ter sido perdidas sem essa exposição internacional. 
+          <br><br>
+          <strong style="color:#FAD7A0;">Este é um exemplo perfeito do dilema central do museu:</strong> 
+          o turismo valoriza ou transforma a identidade dos lugares?
+        </p>
       </div>
 
       <div id="quiz-room5"></div>
 
       <div class="room-nav-footer">
-        <button class="nav-arrow" onclick="goRoom(4)">← Sala 4: Ambiente</button>
-        <button class="nav-arrow" onclick="goRoom(6)">Próxima: Soluções →</button>
+        <button class="nav-arrow prev" onclick="goRoom(4)">← Sala 4: Ambiente</button>
+        <button class="nav-arrow next" onclick="goRoom(6)">Próxima Sala: Soluções →</button>
       </div>
     </div>
   </div>
 
-  <!-- ══ SALA 6 ══ -->
+  <!-- ═══════════════════════════════════════
+       SALA 6 – TURISMO SUSTENTÁVEL
+       ═══════════════════════════════════════ -->
   <div id="room-6" class="room room-6">
     <div class="room-hero">
       <div class="room-hero-bg"></div>
+      <div class="room-hero-particles" id="heroParticles6"></div>
       <div class="room-deco">♻</div>
       <div class="room-hero-content">
         <div class="room-number">SALA 06 / 06</div>
         <h2 class="room-title">Turismo<br><span>Sustentável</span></h2>
       </div>
     </div>
+    
     <div class="room-content fade-in">
       <div class="section-label">SOLUÇÕES PARA O FUTURO</div>
-      <h3 class="section-heading">Um Turismo que Respeita</h3>
+      <h3 class="section-heading">Um Turismo que Respeita a Cidade</h3>
       <div class="divider"></div>
-      <p class="lead-text">O turismo sustentável busca valorizar a cultura e história da cidade sem prejudicar o meio ambiente e a qualidade de vida dos moradores. Em São Paulo, já existem iniciativas concretas nessa direção.</p>
+      <p class="lead-text">
+        O turismo sustentável busca <strong style="color:#82E0AA;">valorizar a cultura e história</strong> 
+        da cidade sem prejudicar o meio ambiente e a qualidade de vida dos moradores. 
+        Em São Paulo, já existem iniciativas concretas que apontam o caminho para um futuro melhor.
+      </p>
 
       <div class="action-grid">
         <div class="action-card">
@@ -1790,62 +3148,78 @@ body {
         <div class="action-card">
           <div class="action-icon">♻</div>
           <h3>Coleta Seletiva</h3>
-          <p>Pontos de coleta seletiva em áreas turísticas, com educação ambiental para turistas, reduzem o lixo e promovem a reciclagem.</p>
+          <p>Pontos de coleta seletiva em áreas turísticas com educação ambiental para visitantes reduzem o lixo e promovem a reciclagem.</p>
         </div>
         <div class="action-card">
           <div class="action-icon">🚇</div>
           <h3>Transporte Público</h3>
-          <p>Incentivar turistas a usar metrô, ônibus e bicicleta reduz o trânsito e as emissões de carbono nas áreas centrais.</p>
+          <p>Incentivar turistas a usar metrô, ônibus e bicicletas reduz o trânsito e as emissões de carbono nas áreas centrais.</p>
         </div>
         <div class="action-card">
           <div class="action-icon">🌳</div>
           <h3>Conservação de Parques</h3>
-          <p>Limitar o número de visitantes por dia em parques, criar trilhas sinalizadas e investir em reflorestamento garantem a preservação ambiental.</p>
+          <p>Limitar visitantes por dia, criar trilhas sinalizadas e investir em reflorestamento garantem a preservação ambiental.</p>
         </div>
         <div class="action-card">
           <div class="action-icon">📚</div>
           <h3>Educação Cultural</h3>
-          <p>Museus como o do Ipiranga incentivam a educação cultural e a preservação da memória brasileira para as próximas gerações.</p>
+          <p>Museus como o do Ipiranga incentivam a educação e a preservação da memória brasileira para as futuras gerações.</p>
         </div>
         <div class="action-card">
           <div class="action-icon">🤝</div>
           <h3>Turismo Comunitário</h3>
-          <p>Apoiar iniciativas que envolvem moradores locais na experiência turística garante que os benefícios cheguem à comunidade.</p>
+          <p>Iniciativas que envolvem moradores locais na experiência turística garantem que os benefícios cheguem à comunidade.</p>
         </div>
       </div>
 
-      <!-- Museu do Ipiranga as model -->
-      <div style="background:rgba(26,106,74,0.15); border:1px solid rgba(46,125,82,0.3); border-radius:6px; padding:2rem; margin:2rem 0;">
+      <!-- Destaque Museu do Ipiranga -->
+      <div style="background:rgba(26,106,74,0.12); border:1px solid rgba(46,125,82,0.25); border-radius:10px; padding:2.5rem; margin:2.5rem 0;">
         <div class="section-label">EXEMPLO INSPIRADOR</div>
-        <h3 style="font-family:'Playfair Display',serif; color:#82E0AA; font-size:1.3rem; margin-bottom:0.8rem;">O Museu do Ipiranga como Modelo</h3>
-        <p style="font-size:0.9rem; color:var(--cream-dark); line-height:1.7; margin-bottom:1rem;">Após uma ampla restauração concluída em 2022, o Museu do Ipiranga tornou-se um modelo de turismo cultural sustentável. O museu:</p>
-        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem;">
-          <div style="padding:1rem; background:rgba(46,125,82,0.1); border-radius:4px; font-size:0.85rem; color:#A9DFBF; line-height:1.6;">✅ Usa energia solar e sistemas de eficiência energética</div>
-          <div style="padding:1rem; background:rgba(46,125,82,0.1); border-radius:4px; font-size:0.85rem; color:#A9DFBF; line-height:1.6;">✅ Programas educacionais para escolas públicas</div>
-          <div style="padding:1rem; background:rgba(46,125,82,0.1); border-radius:4px; font-size:0.85rem; color:#A9DFBF; line-height:1.6;">✅ Acessibilidade total para pessoas com deficiência</div>
-          <div style="padding:1rem; background:rgba(46,125,82,0.1); border-radius:4px; font-size:0.85rem; color:#A9DFBF; line-height:1.6;">✅ Preserva 450 mil peças do patrimônio brasileiro</div>
+        <h3 style="font-family:'Playfair Display',serif; color:#82E0AA; font-size:1.4rem; margin-bottom:1rem;">O Museu do Ipiranga como Modelo de Sustentabilidade</h3>
+        <p style="font-size:0.95rem; color:var(--cream-dark); line-height:1.8; margin-bottom:1.5rem;">
+          Após uma ampla restauração concluída em <strong style="color:#82E0AA;">2022</strong>, 
+          o Museu do Ipiranga tornou-se referência em turismo cultural sustentável:
+        </p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem;">
+          <div style="padding:1.2rem; background:rgba(46,125,82,0.08); border-radius:6px; font-size:0.88rem; color:#A9DFBF; line-height:1.7;">
+            ✅ Energia solar e sistemas de eficiência energética
+          </div>
+          <div style="padding:1.2rem; background:rgba(46,125,82,0.08); border-radius:6px; font-size:0.88rem; color:#A9DFBF; line-height:1.7;">
+            ✅ Programas educacionais gratuitos para escolas públicas
+          </div>
+          <div style="padding:1.2rem; background:rgba(46,125,82,0.08); border-radius:6px; font-size:0.88rem; color:#A9DFBF; line-height:1.7;">
+            ✅ Acessibilidade total para pessoas com deficiência
+          </div>
+          <div style="padding:1.2rem; background:rgba(46,125,82,0.08); border-radius:6px; font-size:0.88rem; color:#A9DFBF; line-height:1.7;">
+            ✅ Preservação de 450 mil peças do patrimônio brasileiro
+          </div>
         </div>
       </div>
 
-      <!-- Audio Player -->
-      <div class="audio-player" onclick="playAudio(this)">
+      <!-- Audio -->
+      <div class="audio-player" onclick="toggleAudio(this, 'audio6')" id="audioPlayer6">
         <button class="audio-play-btn">▶</button>
         <div class="audio-info">
-          <h4>🎙 Narração: O Futuro do Turismo em SP</h4>
-          <p>Como São Paulo está construindo um turismo mais sustentável</p>
+          <h4>🎙 Narração: O Futuro do Turismo em São Paulo</h4>
+          <p>Como a cidade está construindo um turismo mais sustentável e inclusivo</p>
         </div>
-        <div class="audio-bar"><div class="audio-progress"></div></div>
+        <div class="audio-bar"><div class="audio-progress" id="audioProgress6"></div></div>
       </div>
 
-      <!-- Final Reflection with voting -->
+      <!-- Final Reflection -->
       <div class="final-reflection">
         <h2>🏛 Reflexão Final</h2>
-        <blockquote>"O turismo valoriza ou transforma a identidade das cidades?"</blockquote>
-        <p style="color:var(--cream-dark); font-size:0.9rem; margin-bottom:1rem;">Depois de visitar todas as salas do museu, o que você pensa? Vote e compare com os outros visitantes!</p>
+        <blockquote>
+          "Depois de explorar todas as salas deste museu virtual, <br>
+          <strong style="color:var(--gold);">o turismo valoriza ou transforma a identidade das cidades?</strong>"
+        </blockquote>
+        <p style="color:var(--cream-dark); font-size:0.95rem; margin-bottom:1.5rem;">
+          Sua opinião é fundamental! Vote abaixo e reflita sobre tudo que você aprendeu:
+        </p>
         <div class="vote-options">
-          <button class="vote-btn valoriza" onclick="vote('valoriza')">✨ Valoriza a identidade</button>
-          <button class="vote-btn ambos" onclick="vote('ambos')">⚖ Faz os dois</button>
-          <button class="vote-btn transforma" onclick="vote('transforma')">🔄 Transforma a identidade</button>
+          <button class="vote-btn valoriza" onclick="castVote('valoriza')">✨ Valoriza a Identidade</button>
+          <button class="vote-btn ambos" onclick="castVote('ambos')">⚖ Faz os Dois</button>
+          <button class="vote-btn transforma" onclick="castVote('transforma')">🔄 Transforma a Identidade</button>
         </div>
         <div id="vote-result"></div>
       </div>
@@ -1853,298 +3227,972 @@ body {
       <div id="quiz-room6"></div>
 
       <div class="room-nav-footer">
-        <button class="nav-arrow" onclick="goRoom(5)">← Sala 5: Problemas</button>
-        <button class="nav-arrow" onclick="exitMuseum()">🏛 Voltar à Entrada</button>
+        <button class="nav-arrow prev" onclick="goRoom(5)">← Sala 5: Problemas</button>
+        <button class="nav-arrow next" onclick="exitMuseum()">🏛 Voltar à Entrada do Museu</button>
       </div>
     </div>
   </div>
 
-  <!-- QR Modal -->
-  <div id="qr-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:200; align-items:center; justify-content:center; padding:2rem;">
-    <div style="background:#0D0D0D; border:1px solid var(--gold); border-radius:8px; padding:2.5rem; max-width:450px; width:100%; position:relative;">
-      <button onclick="closeQR()" style="position:absolute; top:1rem; right:1rem; background:transparent; border:none; color:var(--cream-dark); font-size:1.3rem; cursor:pointer;">✕</button>
-      <div style="text-align:center; margin-bottom:1.5rem;">
-        <div style="font-size:2rem; margin-bottom:0.5rem;">📱</div>
-        <h3 id="qr-title" style="font-family:'Playfair Display',serif; color:var(--gold); font-size:1.2rem; margin-bottom:0.5rem;"></h3>
-        <p id="qr-desc" style="font-size:0.88rem; color:var(--cream-dark); line-height:1.6;"></p>
+  <!-- ═══════════════════════════════════════════════
+       QR MODAL
+       ═══════════════════════════════════════════════ -->
+  <div id="qr-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:10000; align-items:center; justify-content:center; padding:2rem; backdrop-filter:blur(10px);">
+    <div style="background:var(--dark); border:1px solid var(--gold); border-radius:12px; padding:3rem; max-width:480px; width:100%; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.8);">
+      <button onclick="closeQR()" style="position:absolute; top:1.2rem; right:1.2rem; background:rgba(255,255,255,0.1); border:none; color:var(--cream); font-size:1.3rem; cursor:pointer; width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:all 0.3s;">✕</button>
+      <div style="text-align:center; margin-bottom:2rem;">
+        <div style="font-size:3rem; margin-bottom:0.8rem;">📱</div>
+        <h3 id="qr-title" style="font-family:'Playfair Display',serif; color:var(--gold); font-size:1.3rem; margin-bottom:0.8rem;"></h3>
+        <p id="qr-desc" style="font-size:0.9rem; color:var(--cream-dark); line-height:1.7;"></p>
       </div>
-      <div style="background:#fff; padding:1.5rem; border-radius:6px; display:flex; align-items:center; justify-content:center; margin-bottom:1rem;">
-        <svg viewBox="0 0 33 33" width="160" height="160" xmlns="http://www.w3.org/2000/svg">
-          <rect width="33" height="33" fill="white"/>
-          <rect x="0" y="0" width="13" height="13" fill="#000"/><rect x="1" y="1" width="11" height="11" fill="#fff"/><rect x="2" y="2" width="9" height="9" fill="#000"/><rect x="3" y="3" width="7" height="7" fill="#fff"/><rect x="4" y="4" width="5" height="5" fill="#000"/>
-          <rect x="20" y="0" width="13" height="13" fill="#000"/><rect x="21" y="1" width="11" height="11" fill="#fff"/><rect x="22" y="2" width="9" height="9" fill="#000"/><rect x="23" y="3" width="7" height="7" fill="#fff"/><rect x="24" y="4" width="5" height="5" fill="#000"/>
-          <rect x="0" y="20" width="13" height="13" fill="#000"/><rect x="1" y="21" width="11" height="11" fill="#fff"/><rect x="2" y="22" width="9" height="9" fill="#000"/><rect x="3" y="23" width="7" height="7" fill="#fff"/><rect x="4" y="24" width="5" height="5" fill="#000"/>
-          <rect x="14" y="0" width="2" height="2" fill="#000"/><rect x="17" y="0" width="2" height="2" fill="#000"/>
-          <rect x="14" y="3" width="3" height="2" fill="#000"/><rect x="18" y="3" width="2" height="2" fill="#000"/>
-          <rect x="14" y="6" width="2" height="2" fill="#000"/><rect x="17" y="6" width="3" height="2" fill="#000"/>
-          <rect x="14" y="9" width="5" height="2" fill="#000"/>
-          <rect x="14" y="14" width="19" height="2" fill="#000"/>
-          <rect x="14" y="17" width="2" height="5" fill="#000"/><rect x="17" y="18" width="5" height="2" fill="#000"/>
-          <rect x="23" y="17" width="10" height="2" fill="#000"/>
-          <rect x="14" y="23" width="3" height="10" fill="#000"/>
-          <rect x="18" y="21" width="2" height="4" fill="#000"/><rect x="21" y="20" width="2" height="13" fill="#000"/>
-          <rect x="24" y="20" width="4" height="2" fill="#000"/><rect x="29" y="20" width="4" height="4" fill="#000"/>
-          <rect x="24" y="24" width="5" height="2" fill="#000"/><rect x="30" y="24" width="3" height="9" fill="#000"/>
-          <rect x="24" y="27" width="5" height="2" fill="#000"/><rect x="18" y="26" width="4" height="7" fill="#000"/>
-          <rect x="24" y="30" width="5" height="3" fill="#000"/>
+      <div style="background:#fff; padding:2rem; border-radius:8px; display:flex; align-items:center; justify-content:center; margin-bottom:1.5rem; box-shadow:0 8px 30px rgba(0,0,0,0.3);">
+        <svg viewBox="0 0 37 37" width="180" height="180" xmlns="http://www.w3.org/2000/svg">
+          <rect width="37" height="37" fill="white"/>
+          <rect x="0" y="0" width="15" height="15" fill="#000"/><rect x="1" y="1" width="13" height="13" fill="#fff"/><rect x="2" y="2" width="11" height="11" fill="#000"/><rect x="3" y="3" width="9" height="9" fill="#fff"/><rect x="4" y="4" width="7" height="7" fill="#000"/>
+          <rect x="22" y="0" width="15" height="15" fill="#000"/><rect x="23" y="1" width="13" height="13" fill="#fff"/><rect x="24" y="2" width="11" height="11" fill="#000"/><rect x="25" y="3" width="9" height="9" fill="#fff"/><rect x="26" y="4" width="7" height="7" fill="#000"/>
+          <rect x="0" y="22" width="15" height="15" fill="#000"/><rect x="1" y="23" width="13" height="13" fill="#fff"/><rect x="2" y="24" width="11" height="11" fill="#000"/><rect x="3" y="25" width="9" height="9" fill="#fff"/><rect x="4" y="26" width="7" height="7" fill="#000"/>
+          <rect x="16" y="0" width="2" height="2" fill="#000"/><rect x="19" y="0" width="2" height="2" fill="#000"/>
+          <rect x="16" y="3" width="3" height="2" fill="#000"/><rect x="20" y="3" width="2" height="3" fill="#000"/>
+          <rect x="16" y="6" width="2" height="3" fill="#000"/><rect x="19" y="7" width="3" height="2" fill="#000"/>
+          <rect x="16" y="10" width="6" height="2" fill="#000"/><rect x="16" y="16" width="21" height="2" fill="#000"/>
+          <rect x="16" y="19" width="2" height="6" fill="#000"/><rect x="19" y="20" width="6" height="2" fill="#000"/>
+          <rect x="26" y="19" width="11" height="2" fill="#000"/><rect x="16" y="26" width="4" height="11" fill="#000"/>
+          <rect x="21" y="24" width="2" height="5" fill="#000"/><rect x="24" y="22" width="2" height="15" fill="#000"/>
+          <rect x="27" y="23" width="4" height="2" fill="#000"/><rect x="32" y="23" width="5" height="4" fill="#000"/>
+          <rect x="27" y="27" width="5" height="2" fill="#000"/><rect x="33" y="26" width="4" height="11" fill="#000"/>
+          <rect x="27" y="30" width="5" height="2" fill="#000"/><rect x="21" y="30" width="4" height="7" fill="#000"/>
+          <rect x="27" y="33" width="6" height="4" fill="#000"/>
         </svg>
       </div>
-      <p style="font-size:0.78rem; color:var(--cream-dark); text-align:center; font-style:italic;">Escaneie com a câmera do celular para acessar o conteúdo</p>
+      <p style="font-size:0.8rem; color:var(--cream-dark); text-align:center; font-style:italic;">
+        📷 Aponte a câmera do seu celular para o QR code e acesse o conteúdo exclusivo
+      </p>
     </div>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <button class="lightbox-close">✕</button>
+    <img class="lightbox-content" id="lightboxImg" src="" alt="">
   </div>
 
 </div><!-- end museum -->
 
-<script>
-// ── STATE ──
-let currentRoom = 1;
-const totalRooms = 6;
-let audioIntervals = {};
-let quizData = {};
+<!-- ═══════════════════════════════════════════════
+   FINAL CORRETO DO MUSEUM + MODAIS + SCRIPTS
+   ═══════════════════════════════════════════════ -->
 
-// ── QUIZ BANK ──
+</div><!-- FIM DO #museum -->
+
+<!-- ═══════════════════════════════════════════
+   TOAST CONTAINER (fora do museum, mas no body)
+   ═══════════════════════════════════════════ -->
+<div id="toast-container" style="position:fixed; bottom:2rem; right:2rem; z-index:10001; display:flex; flex-direction:column-reverse; gap:0.5rem; pointer-events:none;"></div>
+
+<!-- ═══════════════════════════════════════════
+   MODAL DE CONQUISTAS (ACHIEVEMENTS)
+   ═══════════════════════════════════════════ -->
+<div id="achievement-modal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:10002; background:var(--dark); border:2px solid var(--gold); border-radius:16px; padding:2.5rem; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.9); max-width:400px; width:90%;">
+  <div style="font-size:3.5rem; margin-bottom:1rem;" id="achievement-icon">🏆</div>
+  <h3 style="font-family:var(--font-display); color:var(--gold); font-size:1.5rem; margin-bottom:0.5rem;" id="achievement-title">Conquista Desbloqueada!</h3>
+  <p style="font-size:0.95rem; color:var(--cream-dark); line-height:1.6;" id="achievement-desc"></p>
+  <button onclick="closeAchievement()" style="margin-top:1.8rem; padding:0.8rem 2.5rem; background:linear-gradient(135deg,var(--gold),var(--gold-dark)); color:var(--dark); border:none; border-radius:30px; cursor:pointer; font-family:var(--font-body); font-weight:600; transition:all 0.3s; box-shadow:0 6px 20px rgba(201,168,76,0.3);">CONTINUAR EXPLORANDO</button>
+</div>
+
+<div id="achievement-backdrop" style="display:none; position:fixed; inset:0; z-index:10001; background:rgba(0,0,0,0.75); backdrop-filter:blur(3px);" onclick="closeAchievement()"></div>
+
+<!-- ═══════════════════════════════════════════
+   BARRA DE CONQUISTAS (BADGES)
+   ═══════════════════════════════════════════ -->
+<div id="achievements-bar" style="position:fixed; bottom:2rem; left:2rem; z-index:999; display:flex; gap:0.6rem; flex-wrap:wrap; max-width:350px; pointer-events:none;">
+  <!-- Badges gerados dinamicamente pelo JS -->
+</div>
+
+<!-- ═══════════════════════════════════════════
+   BOTÃO VOLTAR AO TOPO
+   ═══════════════════════════════════════════ -->
+<button id="back-to-top" onclick="window.scrollTo({top:0, behavior:'smooth'})" style="display:none; position:fixed; bottom:2rem; right:2rem; z-index:998; width:50px; height:50px; border-radius:50%; background:linear-gradient(135deg,var(--gold),var(--gold-dark)); color:var(--dark); border:none; cursor:pointer; font-size:1.3rem; box-shadow:0 8px 25px rgba(201,168,76,0.4); transition:all 0.3s var(--ease-out-expo);" title="Voltar ao topo" aria-label="Voltar ao topo">↑</button>
+
+<!-- ═══════════════════════════════════════════
+   INDICADOR DE SALA (MOBILE)
+   ═══════════════════════════════════════════ -->
+<div id="room-indicator-mobile" style="display:none; position:fixed; bottom:1.2rem; left:50%; transform:translateX(-50%); z-index:997; background:rgba(10,10,12,0.92); border:1px solid var(--gold); border-radius:30px; padding:0.5rem 1.4rem; font-size:0.8rem; color:var(--cream); backdrop-filter:blur(15px); font-family:var(--font-body); font-weight:500; box-shadow:0 4px 20px rgba(0,0,0,0.5);">
+  📍 Sala <span id="current-room-mobile">1</span> de 6
+</div>
+
+<!-- ═══════════════════════════════════════════
+   TOOLTIP FLUTUANTE
+   ═══════════════════════════════════════════ -->
+<div id="tooltip" style="display:none; position:fixed; z-index:10003; background:rgba(10,10,12,0.96); border:1px solid var(--gold); border-radius:6px; padding:0.8rem 1.2rem; font-size:0.82rem; color:var(--cream); pointer-events:none; max-width:280px; box-shadow:0 8px 30px rgba(0,0,0,0.7); line-height:1.5; backdrop-filter:blur(10px);"></div>
+
+<!-- ═══════════════════════════════════════════
+   EFEITO DE TRANSIÇÃO DE PÁGINA
+   ═══════════════════════════════════════════ -->
+<div id="page-transition" style="position:fixed; inset:0; z-index:99999; background:var(--darker); pointer-events:none; opacity:0; transition:opacity 0.5s var(--ease-out-expo);"></div>
+
+<script>
+// ═══════════════════════════════════════════════
+// MUSEU VIRTUAL INTERATIVO DE SÃO PAULO
+// JAVASCRIPT CORRIGIDO - FUNÇÕES GLOBAIS
+// ═══════════════════════════════════════════════
+
+// ═══════════════════════════════════════
+// CONFIGURAÇÕES GLOBAIS
+// ═══════════════════════════════════════
+const CONFIG = {
+  totalRooms: 6,
+  particleCount: 50,
+  heroParticleCount: 30,
+  audioSimulationSpeed: 0.4,
+  toastDuration: 3500,
+  splashDuration: 2200,
+  achievementCheckInterval: 500,
+  scrollThreshold: 400,
+  mobileBreakpoint: 768,
+};
+
+// ═══════════════════════════════════════
+// ESTADO GLOBAL
+// ═══════════════════════════════════════
+const STATE = {
+  currentRoom: 1,
+  audioPlayers: {},
+  quizAnswered: {},
+  visitedRooms: new Set([1]),
+  totalQuizCorrect: 0,
+  totalQuizAttempts: 0,
+  museumEntered: false,
+  achievements: [],
+  hotspotsClicked: new Set(),
+  timelineItemsExpanded: new Set(),
+  cultureCardsExpanded: new Set(),
+  impactBarsExpanded: new Set(),
+  mapPointsClicked: new Set(),
+  audioPlayed: new Set(),
+  voteSubmitted: false,
+};
+
+// ═══════════════════════════════════════
+// SISTEMA DE CONQUISTAS
+// ═══════════════════════════════════════
+const ACHIEVEMENTS = {
+  explorer: {
+    id: 'explorer',
+    icon: '🗺️',
+    title: 'Grande Explorador',
+    desc: 'Visitou todas as 6 salas do museu!',
+    condition: function() { return STATE.visitedRooms.size >= 6; },
+    unlocked: false,
+  },
+  quizMaster: {
+    id: 'quizMaster',
+    icon: '🧠',
+    title: 'Mestre dos Quizzes',
+    desc: 'Acertou 5 quizzes ou mais!',
+    condition: function() { return STATE.totalQuizCorrect >= 5; },
+    unlocked: false,
+  },
+  curious: {
+    id: 'curious',
+    icon: '🔍',
+    title: 'Mente Curiosa',
+    desc: 'Clicou em 5 hotspots interativos!',
+    condition: function() { return STATE.hotspotsClicked.size >= 5; },
+    unlocked: false,
+  },
+  timelineScholar: {
+    id: 'timelineScholar',
+    icon: '📜',
+    title: 'Estudioso da História',
+    desc: 'Expandiu todos os eventos da linha do tempo!',
+    condition: function() { return STATE.timelineItemsExpanded.size >= 6; },
+    unlocked: false,
+  },
+  cultureVulture: {
+    id: 'cultureVulture',
+    icon: '🎭',
+    title: 'Apreciador Cultural',
+    desc: 'Explorou todos os cartões culturais!',
+    condition: function() { return STATE.cultureCardsExpanded.size >= 6; },
+    unlocked: false,
+  },
+  ecoWarrior: {
+    id: 'ecoWarrior',
+    icon: '🌱',
+    title: 'Guerreiro Ecológico',
+    desc: 'Verificou todos os impactos ambientais!',
+    condition: function() { return STATE.impactBarsExpanded.size >= 5; },
+    unlocked: false,
+  },
+  cartographer: {
+    id: 'cartographer',
+    icon: '📍',
+    title: 'Cartógrafo',
+    desc: 'Clicou em todos os pontos do mapa turístico!',
+    condition: function() { return STATE.mapPointsClicked.size >= 5; },
+    unlocked: false,
+  },
+  audioListener: {
+    id: 'audioListener',
+    icon: '🎧',
+    title: 'Ouvinte Atento',
+    desc: 'Ouviu todas as narrações de áudio!',
+    condition: function() { return STATE.audioPlayed.size >= 2; },
+    unlocked: false,
+  },
+  voter: {
+    id: 'voter',
+    icon: '🗳️',
+    title: 'Cidadão Participativo',
+    desc: 'Votou na reflexão final do museu!',
+    condition: function() { return STATE.voteSubmitted; },
+    unlocked: false,
+  },
+};
+
+// ═══════════════════════════════════════
+// DADOS DOS QUIZZES
+// ═══════════════════════════════════════
 const quizzes = {
   1: {
-    question: "Em que ano São Paulo foi fundada pelos padres jesuítas?",
-    options: ["1454", "1554", "1654", "1754"],
+    question: 'Em que ano São Paulo foi fundada pelos padres jesuítas?',
+    options: ['1454', '1554', '1654', '1754'],
     correct: 1,
-    explanation: "Correto! São Paulo foi fundada em 25 de janeiro de 1554 pelos jesuítas Manuel da Nóbrega e José de Anchieta no Planalto de Piratininga."
+    explanation: 'Correto! São Paulo foi fundada em 25 de janeiro de 1554 pelos jesuítas Manuel da Nóbrega e José de Anchieta no Planalto de Piratininga.'
   },
   2: {
-    question: "Qual é o museu que guarda a história da Independência do Brasil e fica no Parque da Independência?",
-    options: ["Museu de Arte de SP (MASP)", "Museu do Ipiranga (Museu Paulista)", "Pinacoteca do Estado", "Museu da Língua Portuguesa"],
+    question: 'Qual museu guarda a história da Independência do Brasil no Parque da Independência?',
+    options: ['MASP', 'Museu do Ipiranga', 'Pinacoteca', 'Museu da Língua Portuguesa'],
     correct: 1,
-    explanation: "O Museu do Ipiranga, também chamado de Museu Paulista, foi inaugurado em 1895 exatamente no local onde Dom Pedro I proclamou a Independência do Brasil em 1822."
+    explanation: 'O Museu do Ipiranga (Museu Paulista) foi inaugurado em 1895 no local onde Dom Pedro I proclamou a Independência em 1822.'
   },
   3: {
-    question: "Por que São Paulo tem mais pizzarias per capita que Nápoles, na Itália?",
-    options: ["Porque a pizza foi inventada no Brasil", "Pela forte imigração italiana que trouxe a tradição", "Por imposição do governo", "Porque é mais barata que outros alimentos"],
+    question: 'Por que São Paulo tem mais pizzarias que Nápoles?',
+    options: ['Pizza foi inventada no Brasil', 'Forte imigração italiana', 'Imposição do governo', 'É mais barata'],
     correct: 1,
-    explanation: "Os imigrantes italianos chegaram em SP a partir do final do século XIX para trabalhar nas fazendas de café. Com eles, trouxeram a tradição da pizza, que se adaptou e cresceu tanto que hoje SP tem mais de 6.000 pizzarias!"
+    explanation: 'Imigrantes italianos trouxeram a tradição da pizza. Hoje SP tem mais de 6.000 pizzarias!'
   },
   4: {
-    question: "Qual é o fenômeno chamado quando o turismo em excesso prejudica os moradores e a identidade de bairros?",
-    options: ["Ecoturismo", "Overtourism / Gentrificação", "Turismo sustentável", "Agroturismo"],
+    question: 'Qual fenômeno ocorre quando o turismo excessivo prejudica moradores?',
+    options: ['Ecoturismo', 'Overtourism / Gentrificação', 'Turismo rural', 'Agroturismo'],
     correct: 1,
-    explanation: "O 'overtourism' (turismo em excesso) junto com a gentrificação são os principais problemas quando bairros históricos mudam para agradar turistas, expulsando moradores e perdendo sua identidade original."
+    explanation: 'Overtourism e gentrificação ocorrem quando bairros mudam para agradar turistas, expulsando moradores.'
   },
   5: {
-    question: "O que significa turismo sustentável?",
-    options: ["Turismo só para ricos", "Turismo que valoriza cultura e história sem prejudicar o ambiente e moradores", "Viajar de avião sempre", "Visitar apenas parques naturais"],
+    question: 'O que é turismo sustentável?',
+    options: ['Turismo de luxo', 'Turismo que respeita cultura e ambiente', 'Viajar de avião', 'Só visitar praias'],
     correct: 1,
-    explanation: "Turismo sustentável significa aproveitar a cultura e os atrativos de uma cidade de forma responsável, respeitando o meio ambiente, a comunidade local e preservando a identidade cultural para as futuras gerações."
+    explanation: 'Turismo sustentável valoriza cultura e história sem prejudicar o ambiente e os moradores.'
   },
   6: {
-    question: "Qual bairro de São Paulo é o centro da maior comunidade japonesa fora do Japão?",
-    options: ["Brás", "Mooca", "Liberdade", "Vila Madalena"],
+    question: 'Qual bairro de SP é o centro da comunidade japonesa?',
+    options: ['Brás', 'Mooca', 'Liberdade', 'Vila Madalena'],
     correct: 2,
-    explanation: "O bairro da Liberdade é o coração da cultura japonesa em São Paulo. Com restaurantes, lojas e festas típicas, é também um dos bairros mais visitados por turistas que querem conhecer essa rica herança cultural."
-  }
+    explanation: 'O bairro da Liberdade é o coração da cultura japonesa em São Paulo.'
+  },
 };
 
-// ── MUSEUM ENTER/EXIT ──
-function enterMuseum() {
-  document.getElementById('entrance').style.display = 'none';
-  document.getElementById('museum').style.display = 'block';
-  goRoom(1);
-  setTimeout(() => initImpactBars(), 300);
-}
-
-function exitMuseum() {
-  document.getElementById('museum').style.display = 'none';
-  document.getElementById('entrance').style.display = 'flex';
-}
-
-// ── ROOM NAVIGATION ──
-function goRoom(n) {
-  // Hide all
-  document.querySelectorAll('.room').forEach(r => r.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  // Show target
-  document.getElementById('room-' + n).classList.add('active');
-  document.querySelectorAll('.nav-btn')[n-1].classList.add('active');
-  currentRoom = n;
-  // Progress
-  document.getElementById('progress-bar').style.width = (n / totalRooms * 100) + '%';
-  // Scroll to top
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  // Init quiz for room
-  buildQuiz(n);
-  // Animate impact bars if room 4
-  if (n === 4) setTimeout(initImpactBars, 600);
-}
-
-// ── TIMELINE ──
-function toggleTimeline(el) {
-  el.classList.toggle('open');
-}
-
-// ── HOTSPOT ──
-function toggleHotspot(el) {
-  const wasActive = el.classList.contains('active');
-  document.querySelectorAll('.hotspot').forEach(h => h.classList.remove('active'));
-  if (!wasActive) el.classList.add('active');
-}
-
-// ── MAP ──
+// ═══════════════════════════════════════
+// DADOS DO MAPA
+// ═══════════════════════════════════════
 const mapInfos = {
-  1: { title: "🏛 Museu do Ipiranga", text: "Inaugurado em 1895, o Museu Paulista fica no Parque da Independência. Após restauração completa em 2022, reabriu com exposições renovadas sobre a história do Brasil. Guarda 450 mil peças históricas, incluindo a famosa tela 'Independência ou Morte' de Pedro Américo." },
-  2: { title: "⚔ Monumento à Independência", text: "Localizado no Parque da Independência, o monumento foi inaugurado em 1922 para celebrar o centenário da Independência. Abriga o Mausoléu da Independência, onde estão os restos mortais de Dom Pedro I e Dona Leopoldina." },
-  3: { title: "⛪ Catedral da Sé", text: "A Catedral Metropolitana de São Paulo, na Praça da Sé, foi inaugurada em 1954. Em estilo neogótico, tem capacidade para 8.000 pessoas e torres de 92 metros. É o marco zero da cidade, de onde todas as distâncias são medidas." },
-  4: { title: "🌳 Parque Ibirapuera", text: "O 'pulmão de São Paulo' tem 160 hectares no coração da cidade. Projetado por Oscar Niemeyer em 1954, abriga museus (MAM, Afro Brasil), o Auditório Ibirapuera e recebe mais de 14 milhões de visitantes por ano." },
-  5: { title: "🇯🇵 Bairro da Liberdade", text: "Coração da cultura japonesa fora do Japão. Fundado por imigrantes japoneses no início do século XX, hoje mistura cultura japonesa, coreana e chinesa. Famoso pelo Feira da Liberdade aos domingos, com gastronomia e artesanato asiático." }
+  1: { title: '🏛 Museu do Ipiranga', text: 'Inaugurado em 1895, guarda 450 mil peças históricas. Reaberto em 2022 após grande restauração.' },
+  2: { title: '⚔ Monumento à Independência', text: 'Inaugurado em 1922, abriga os restos de Dom Pedro I e Dona Leopoldina.' },
+  3: { title: '⛪ Catedral da Sé', text: 'Inaugurada em 1954, estilo neogótico, capacidade para 8.000 pessoas. Marco zero de SP.' },
+  4: { title: '🌳 Parque Ibirapuera', text: '160 hectares, projetado por Niemeyer em 1954. Recebe 14 milhões de visitantes por ano.' },
+  5: { title: '🇯🇵 Bairro da Liberdade', text: 'Maior comunidade japonesa fora do Japão. Famoso pela feira aos domingos.' },
 };
 
-function showMapInfo(n) {
-  const info = mapInfos[n];
-  document.getElementById('map-info-box').innerHTML = `<h4>${info.title}</h4><p>${info.text}</p>`;
+// ═══════════════════════════════════════
+// FUNÇÕES UTILITÁRIAS
+// ═══════════════════════════════════════
+function $(selector) {
+  return document.querySelector(selector);
 }
 
-// ── CULTURE ──
-function toggleCulture(el) {
-  el.classList.toggle('open');
+function $$(selector) {
+  return document.querySelectorAll(selector);
 }
 
-// ── TRADITION ──
-function selectTrad(btn, response) {
-  document.querySelectorAll('.trad-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  const el = document.getElementById('trad-response');
-  el.style.opacity = 0;
-  setTimeout(() => {
-    el.textContent = '💬 ' + response;
-    el.style.transition = 'opacity 0.4s';
-    el.style.opacity = 1;
-  }, 200);
+// ═══════════════════════════════════════
+// TOAST NOTIFICATIONS
+// ═══════════════════════════════════════
+function showToast(message, type) {
+  type = type || 'info';
+  const container = document.getElementById('toast-container');
+  if (!container) return;
+
+  const toast = document.createElement('div');
+  const icons = { info: 'ℹ️', success: '✅', warning: '⚠️', achievement: '🏆' };
+
+  toast.innerHTML = (icons[type] || icons.info) + ' ' + message;
+  toast.style.cssText = 'position:relative; background:rgba(10,10,12,0.95); border:1px solid #C9A84C; padding:1rem 1.5rem; border-radius:8px; color:#F5EFE0; font-size:0.9rem; box-shadow:0 10px 30px rgba(0,0,0,0.5); backdrop-filter:blur(15px); display:flex; align-items:center; gap:0.6rem; animation:toastIn 0.4s ease, toastOut 0.3s 3s ease forwards; pointer-events:auto; max-width:400px; margin-bottom:0.5rem;';
+
+  container.appendChild(toast);
+
+  setTimeout(function() {
+    if (toast.parentNode) toast.remove();
+  }, CONFIG.toastDuration);
 }
 
-// ── IMPACT BARS ──
-function initImpactBars() {
-  document.querySelectorAll('.impact-fill').forEach(bar => {
-    const w = bar.getAttribute('data-width');
-    bar.style.width = w + '%';
+// ═══════════════════════════════════════
+// VERIFICAR CONQUISTAS
+// ═══════════════════════════════════════
+function checkAchievements() {
+  Object.keys(ACHIEVEMENTS).forEach(function(key) {
+    var achievement = ACHIEVEMENTS[key];
+    if (!achievement.unlocked && achievement.condition()) {
+      achievement.unlocked = true;
+      STATE.achievements.push(key);
+      showAchievementPopup(achievement);
+      addAchievementBadge(achievement);
+      showToast('🏆 Conquista: ' + achievement.title + '!', 'achievement');
+    }
   });
 }
 
-function toggleImpact(el) {
-  el.classList.toggle('open');
+function showAchievementPopup(achievement) {
+  var modal = document.getElementById('achievement-modal');
+  var backdrop = document.getElementById('achievement-backdrop');
+  var icon = document.getElementById('achievement-icon');
+  var title = document.getElementById('achievement-title');
+  var desc = document.getElementById('achievement-desc');
+
+  if (icon) icon.textContent = achievement.icon;
+  if (title) title.textContent = achievement.title;
+  if (desc) desc.textContent = achievement.desc;
+  if (backdrop) backdrop.style.display = 'block';
+  if (modal) {
+    modal.style.display = 'block';
+    modal.style.animation = 'scaleIn 0.5s ease';
+  }
 }
 
-// ── QUIZ BUILD ──
-function buildQuiz(roomNum) {
-  const container = document.getElementById('quiz-room' + roomNum);
-  if (!container || container.innerHTML) return;
+function closeAchievement() {
+  var modal = document.getElementById('achievement-modal');
+  var backdrop = document.getElementById('achievement-backdrop');
+  if (modal) modal.style.display = 'none';
+  if (backdrop) backdrop.style.display = 'none';
+}
 
-  const q = quizzes[roomNum];
+function addAchievementBadge(achievement) {
+  var bar = document.getElementById('achievements-bar');
+  if (!bar) return;
+
+  var badge = document.createElement('div');
+  badge.title = achievement.title + ': ' + achievement.desc;
+  badge.style.cssText = 'width:44px;height:44px;border-radius:50%;background:rgba(201,168,76,0.15);border:2px solid #C9A84C;display:flex;align-items:center;justify-content:center;font-size:1.3rem;cursor:pointer;transition:all 0.3s;animation:scaleIn 0.5s ease;box-shadow:0 4px 15px rgba(201,168,76,0.3);';
+  badge.textContent = achievement.icon;
+
+  badge.addEventListener('click', function() {
+    showAchievementPopup(achievement);
+  });
+
+  bar.appendChild(badge);
+}
+
+// Verificar conquistas periodicamente
+setInterval(checkAchievements, CONFIG.achievementCheckInterval);
+
+// ═══════════════════════════════════════
+// CURSOR PERSONALIZADO
+// ═══════════════════════════════════════
+function initCursor() {
+  if (window.innerWidth <= CONFIG.mobileBreakpoint) {
+    var c = document.getElementById('cursor');
+    var cf = document.getElementById('cursorFollower');
+    if (c) c.style.display = 'none';
+    if (cf) cf.style.display = 'none';
+    return;
+  }
+
+  var mouseX = 0, mouseY = 0;
+  var cursorX = 0, cursorY = 0;
+  var followerX = 0, followerY = 0;
+
+  document.addEventListener('mousemove', function(e) {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  function animateCursor() {
+    cursorX += (mouseX - cursorX) * 0.3;
+    cursorY += (mouseY - cursorY) * 0.3;
+    followerX += (mouseX - followerX) * 0.08;
+    followerY += (mouseY - followerY) * 0.08;
+
+    var c = document.getElementById('cursor');
+    var cf = document.getElementById('cursorFollower');
+    if (c) { c.style.left = cursorX + 'px'; c.style.top = cursorY + 'px'; }
+    if (cf) { cf.style.left = followerX + 'px'; cf.style.top = followerY + 'px'; }
+
+    requestAnimationFrame(animateCursor);
+  }
+
+  animateCursor();
+}
+
+// ═══════════════════════════════════════
+// PARTÍCULAS DE FUNDO
+// ═══════════════════════════════════════
+function createBackgroundParticles() {
+  var container = document.getElementById('particles-container');
+  if (!container) return;
+
+  for (var i = 0; i < CONFIG.particleCount; i++) {
+    var p = document.createElement('div');
+    p.classList.add('particle');
+    var size = Math.random() * 4 + 2;
+    p.style.cssText = 'width:' + size + 'px;height:' + size + 'px;left:' + (Math.random() * 100) + '%;animation-delay:' + (Math.random() * 15) + 's;animation-duration:' + (Math.random() * 12 + 8) + 's;opacity:' + (Math.random() * 0.6 + 0.1) + ';';
+    container.appendChild(p);
+  }
+}
+
+// ═══════════════════════════════════════
+// PARTÍCULAS DO HERO
+// ═══════════════════════════════════════
+function createHeroParticles(roomNum) {
+  var container = document.getElementById('heroParticles' + roomNum);
+  if (!container || container.children.length > 0) return;
+  container.innerHTML = '';
+
+  for (var i = 0; i < CONFIG.heroParticleCount; i++) {
+    var p = document.createElement('div');
+    p.classList.add('hero-particle');
+    p.style.cssText = 'width:' + (Math.random() * 3 + 1) + 'px;height:' + (Math.random() * 3 + 1) + 'px;left:' + (Math.random() * 100) + '%;bottom:' + (Math.random() * 50) + '%;animation-delay:' + (Math.random() * 8) + 's;animation-duration:' + (Math.random() * 10 + 8) + 's;';
+    container.appendChild(p);
+  }
+}
+
+// ═══════════════════════════════════════
+// ENTRAR NO MUSEU (FUNÇÃO GLOBAL)
+// ═══════════════════════════════════════
+window.enterMuseum = function() {
+  console.log('🏛️ Botão ENTRAR clicado!');
+
+  var entrance = document.getElementById('entrance');
+  var museum = document.getElementById('museum');
+
+  if (!entrance || !museum) {
+    console.error('❌ Elementos entrance ou museum não encontrados!');
+    alert('Erro: Elementos não encontrados. Verifique o HTML.');
+    return;
+  }
+
+  STATE.museumEntered = true;
+
+  // Animação de saída
+  entrance.style.opacity = '0';
+  entrance.style.transform = 'scale(0.95)';
+  entrance.style.transition = 'all 0.6s ease';
+
+  setTimeout(function() {
+    entrance.style.display = 'none';
+    museum.style.display = 'block';
+    museum.style.opacity = '1';
+
+    // Inicializar salas
+    window.goRoom(1);
+
+    // Criar partículas
+    createHeroParticles(1);
+
+    // Mostrar toast de boas-vindas
+    showToast('🏛 Bem-vindo ao Museu Virtual de São Paulo!', 'info');
+
+    // Salvar visita
+    try {
+      localStorage.setItem('museuSP_visited', 'true');
+    } catch(e) {}
+
+    console.log('✅ Museu aberto!');
+  }, 600);
+};
+
+// ═══════════════════════════════════════
+// SAIR DO MUSEU (FUNÇÃO GLOBAL)
+// ═══════════════════════════════════════
+window.exitMuseum = function() {
+  var entrance = document.getElementById('entrance');
+  var museum = document.getElementById('museum');
+  if (!entrance || !museum) return;
+
+  museum.style.opacity = '0';
+  museum.style.transition = 'opacity 0.5s ease';
+
+  setTimeout(function() {
+    museum.style.display = 'none';
+    entrance.style.display = 'flex';
+    entrance.style.opacity = '1';
+    entrance.style.transform = 'scale(1)';
+
+    STATE.currentRoom = 1;
+    STATE.quizAnswered = {};
+    document.querySelectorAll('.vote-btn').forEach(function(b) { b.classList.remove('voted'); });
+    var vr = document.getElementById('vote-result');
+    if (vr) vr.style.display = 'none';
+
+    showToast('👋 Obrigado por visitar! Volte sempre.', 'info');
+  }, 500);
+};
+
+// ═══════════════════════════════════════
+// NAVEGAÇÃO ENTRE SALAS (FUNÇÃO GLOBAL)
+// ═══════════════════════════════════════
+window.goRoom = function(roomNum) {
+  console.log('📍 Indo para sala:', roomNum);
+
+  if (roomNum < 1 || roomNum > CONFIG.totalRooms) return;
+
+  // Esconder todas as salas
+  document.querySelectorAll('.room').forEach(function(r) {
+    r.classList.remove('active');
+  });
+
+  // Mostrar sala alvo
+  var target = document.getElementById('room-' + roomNum);
+  if (target) {
+    target.classList.add('active');
+  }
+
+  // Atualizar navegação
+  document.querySelectorAll('.nav-btn').forEach(function(btn, i) {
+    if (i === roomNum - 1) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+
+  // Atualizar estado
+  STATE.currentRoom = roomNum;
+  STATE.visitedRooms.add(roomNum);
+
+  // Progress bar
+  var pb = document.getElementById('progress-bar');
+  if (pb) {
+    pb.style.width = (roomNum / CONFIG.totalRooms * 100) + '%';
+  }
+
+  // Indicador mobile
+  var crm = document.getElementById('current-room-mobile');
+  if (crm) crm.textContent = roomNum;
+
+  // Scroll top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Partículas do hero
+  createHeroParticles(roomNum);
+
+  // Timeline (Sala 1)
+  if (roomNum === 1) {
+    setTimeout(buildTimeline, 200);
+  }
+
+  // Impact bars (Sala 4)
+  if (roomNum === 4) {
+    setTimeout(function() {
+      document.querySelectorAll('.impact-fill').forEach(function(bar) {
+        var w = bar.getAttribute('data-width');
+        if (w) bar.style.width = w + '%';
+      });
+    }, 500);
+  }
+
+  // Quiz
+  buildQuiz(roomNum);
+
+  // Fechar menu mobile
+  var mn = document.getElementById('mobileNavMenu');
+  if (mn) mn.classList.remove('open');
+
+  // Conquistas
+  checkAchievements();
+
+  // Toast
+  var roomNames = {
+    1: 'História de São Paulo',
+    2: 'Pontos Turísticos',
+    3: 'Cultura e Tradições',
+    4: 'Impactos Ambientais',
+    5: 'Problemas do Turismo',
+    6: 'Turismo Sustentável',
+  };
+  showToast('📍 Sala ' + roomNum + ': ' + roomNames[roomNum], 'info');
+};
+
+// ═══════════════════════════════════════
+// TIMELINE (FUNÇÃO GLOBAL)
+// ═══════════════════════════════════════
+function buildTimeline() {
+  var container = document.getElementById('timeline1');
+  if (!container || container.children.length > 0) return;
+
+  var data = [
+    { year: '1554', desc: 'Fundação por padres jesuítas no Planalto de Piratininga', extra: 'Os jesuítas Manuel da Nóbrega e José de Anchieta estabeleceram uma missão entre os indígenas.' },
+    { year: '1600s', desc: 'Entreposto dos bandeirantes', extra: 'São Paulo se tornou base das Bandeiras que exploraram o interior do Brasil.' },
+    { year: '1822', desc: 'Independência do Brasil às margens do Rio Ipiranga', extra: 'Dom Pedro I proclamou a Independência em 7 de setembro de 1822.' },
+    { year: '1850–1900', desc: 'Ciclo do café e imigração em massa', extra: 'O café transformou SP. Milhões de imigrantes chegaram da Itália, Japão e outros países.' },
+    { year: '1900–1950', desc: 'Industrialização acelerada', extra: 'SP tornou-se o principal centro industrial do Brasil.' },
+    { year: 'Hoje', desc: 'Metrópole global com 22 milhões de habitantes', extra: 'Maior cidade do Brasil e uma das maiores do mundo.' },
+  ];
+
+  container.innerHTML = data.map(function(item, i) {
+    return '<div class="timeline-item" data-index="' + i + '" onclick="toggleTimelineItem(this)"><div class="timeline-year">' + item.year + '</div><div class="timeline-desc">' + item.desc + '</div><div class="timeline-extra">' + item.extra + '</div></div>';
+  }).join('');
+}
+
+window.toggleTimelineItem = function(el) {
+  el.classList.toggle('open');
+  var idx = parseInt(el.getAttribute('data-index'));
+  if (el.classList.contains('open')) {
+    STATE.timelineItemsExpanded.add(idx);
+  }
+  checkAchievements();
+};
+
+// ═══════════════════════════════════════
+// MAPA (FUNÇÃO GLOBAL)
+// ═══════════════════════════════════════
+window.showMapInfo = function(n) {
+  var box = document.getElementById('map-info-box');
+  var info = mapInfos[n];
+  if (box && info) {
+    box.innerHTML = '<h4>' + info.title + '</h4><p>' + info.text + '</p>';
+    STATE.mapPointsClicked.add(n);
+    checkAchievements();
+  }
+};
+
+// ═══════════════════════════════════════
+// HOTSPOTS (FUNÇÃO GLOBAL)
+// ═══════════════════════════════════════
+window.toggleHotspot = function(el, event) {
+  if (event) event.stopPropagation();
+
+  var wasActive = el.classList.contains('active');
+  document.querySelectorAll('.hotspot').forEach(function(h) { h.classList.remove('active'); });
+
+  if (!wasActive) {
+    el.classList.add('active');
+    STATE.hotspotsClicked.add(el.textContent.trim());
+    checkAchievements();
+  }
+};
+
+window.closeHotspot = function(btn) {
+  var hs = btn.closest('.hotspot');
+  if (hs) hs.classList.remove('active');
+};
+
+// Fechar hotspots ao clicar fora
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.hotspot')) {
+    document.querySelectorAll('.hotspot').forEach(function(h) { h.classList.remove('active'); });
+  }
+});
+
+// ═══════════════════════════════════════
+// CULTURE CARDS (FUNÇÃO GLOBAL)
+// ═══════════════════════════════════════
+window.toggleCulture = function(el) {
+  el.classList.toggle('open');
+  if (el.classList.contains('open')) {
+    var h3 = el.querySelector('h3');
+    if (h3) STATE.cultureCardsExpanded.add(h3.textContent.trim());
+    checkAchievements();
+  }
+};
+
+// ═══════════════════════════════════════
+// IMPACT BARS (FUNÇÃO GLOBAL)
+// ═══════════════════════════════════════
+window.toggleImpact = function(el) {
+  el.classList.toggle('open');
+  if (el.classList.contains('open')) {
+    var label = el.querySelector('.impact-label span');
+    if (label) STATE.impactBarsExpanded.add(label.textContent.trim());
+    checkAchievements();
+  }
+};
+
+// ═══════════════════════════════════════
+// TRADIÇÕES (FUNÇÃO GLOBAL)
+// ═══════════════════════════════════════
+window.selectTrad = function(btn, response) {
+  document.querySelectorAll('.trad-btn').forEach(function(b) { b.classList.remove('selected'); });
+  btn.classList.add('selected');
+  var resp = document.getElementById('trad-response');
+  if (resp) {
+    resp.style.opacity = '0';
+    setTimeout(function() {
+      resp.textContent = '💬 ' + response;
+      resp.style.transition = 'opacity 0.4s';
+      resp.style.opacity = '1';
+    }, 200);
+  }
+};
+
+// ═══════════════════════════════════════
+// ÁUDIO (FUNÇÃO GLOBAL)
+// ═══════════════════════════════════════
+window.toggleAudio = function(player, audioId) {
+  var btn = player.querySelector('.audio-play-btn');
+  var bar = player.querySelector('.audio-progress');
+
+  if (player.classList.contains('playing')) {
+    player.classList.remove('playing');
+    if (btn) btn.textContent = '▶';
+    if (STATE.audioPlayers[audioId]) {
+      clearInterval(STATE.audioPlayers[audioId]);
+      delete STATE.audioPlayers[audioId];
+    }
+    return;
+  }
+
+  player.classList.add('playing');
+  if (btn) btn.textContent = '⏸';
+
+  var progress = parseFloat(bar.style.width) || 0;
+
+  STATE.audioPlayers[audioId] = setInterval(function() {
+    progress += CONFIG.audioSimulationSpeed;
+    if (bar) bar.style.width = progress + '%';
+
+    if (progress >= 100) {
+      clearInterval(STATE.audioPlayers[audioId]);
+      delete STATE.audioPlayers[audioId];
+      player.classList.remove('playing');
+      if (btn) btn.textContent = '▶';
+      if (bar) bar.style.width = '100%';
+      STATE.audioPlayed.add(audioId);
+      checkAchievements();
+
+      setTimeout(function() {
+        if (bar) bar.style.width = '0%';
+      }, 1000);
+    }
+  }, 100);
+};
+
+// ═══════════════════════════════════════
+// QUIZZES (FUNÇÃO GLOBAL)
+// ═══════════════════════════════════════
+function buildQuiz(roomNum) {
+  var container = document.getElementById('quiz-room' + roomNum);
+  if (!container || STATE.quizAnswered[roomNum]) return;
+
+  var q = quizzes[roomNum];
   if (!q) return;
 
-  let state = { answered: false };
-
-  container.innerHTML = `
-    <div class="quiz-section">
-      <div class="quiz-title">🎮 Quiz da Sala ${roomNum}</div>
-      <div class="quiz-question">${q.question}</div>
-      <div class="quiz-options">
-        ${q.options.map((opt, i) => `
-          <button class="quiz-option" onclick="answerQuiz(this, ${i}, ${q.correct}, 'quiz-room${roomNum}', '${q.explanation.replace(/'/g,"\\'")}')">
-            ${String.fromCharCode(65+i)}) ${opt}
-          </button>
-        `).join('')}
-      </div>
-      <div class="quiz-feedback" id="qf-${roomNum}"></div>
-      <button class="quiz-next-btn" id="qnext-${roomNum}" onclick="goRoom(${roomNum < 6 ? roomNum+1 : 1})">
-        ${roomNum < 6 ? 'Próxima Sala →' : '🏛 Recomeçar Museu'}
-      </button>
-    </div>
-  `;
+  container.innerHTML = '<div class="quiz-section"><div class="quiz-title">🎮 Quiz da Sala ' + roomNum + '</div><div class="quiz-question">' + q.question + '</div><div class="quiz-options">' + q.options.map(function(opt, i) {
+    return '<button class="quiz-option" onclick="answerQuiz(this, ' + i + ', ' + q.correct + ', ' + roomNum + ')">' + String.fromCharCode(65 + i) + ') ' + opt + '</button>';
+  }).join('') + '</div><div class="quiz-feedback" id="qf-' + roomNum + '"></div><button class="quiz-next-btn" id="qnext-' + roomNum + '" onclick="goRoom(' + (roomNum < 6 ? roomNum + 1 : 1) + ')">' + (roomNum < 6 ? 'Próxima Sala →' : '🏛 Recomeçar Museu') + '</button></div>';
 }
 
-function answerQuiz(btn, chosen, correct, containerId, explanation) {
-  const opts = btn.parentElement.querySelectorAll('.quiz-option');
-  opts.forEach((o, i) => {
+window.answerQuiz = function(btn, chosen, correct, roomNum) {
+  if (STATE.quizAnswered[roomNum]) return;
+  STATE.quizAnswered[roomNum] = true;
+  STATE.totalQuizAttempts++;
+
+  var opts = btn.parentElement.querySelectorAll('.quiz-option');
+  opts.forEach(function(o, i) {
     o.disabled = true;
     if (i === correct) o.classList.add('correct');
     if (i === chosen && chosen !== correct) o.classList.add('wrong');
   });
 
-  const fb = document.getElementById('qf-' + containerId.replace('quiz-room',''));
-  fb.classList.add('show');
-  if (chosen === correct) {
-    fb.textContent = '✅ ' + explanation;
-    fb.className = 'quiz-feedback show correct';
-  } else {
-    fb.textContent = '❌ Não é bem assim... ' + explanation;
-    fb.className = 'quiz-feedback show wrong';
-  }
+  var fb = document.getElementById('qf-' + roomNum);
+  var q = quizzes[roomNum];
 
-  const nextBtn = document.getElementById('qnext-' + containerId.replace('quiz-room',''));
-  if (nextBtn) nextBtn.style.display = 'inline-block';
-}
-
-// ── AUDIO ──
-let audioTimers = {};
-function playAudio(player) {
-  const btn = player.querySelector('.audio-play-btn');
-  const bar = player.querySelector('.audio-progress');
-  const id = Math.random().toString(36).substr(2,9);
-
-  if (player.dataset.playing === 'true') {
-    player.dataset.playing = 'false';
-    btn.textContent = '▶';
-    clearInterval(player._interval);
-    return;
-  }
-
-  player.dataset.playing = 'true';
-  btn.textContent = '⏸';
-  let progress = parseFloat(bar.style.width) || 0;
-
-  player._interval = setInterval(() => {
-    progress += 0.5;
-    bar.style.width = progress + '%';
-    if (progress >= 100) {
-      clearInterval(player._interval);
-      player.dataset.playing = 'false';
-      btn.textContent = '▶';
-      bar.style.width = '0%';
+  if (fb) {
+    fb.classList.add('show');
+    if (chosen === correct) {
+      fb.textContent = '✅ ' + q.explanation;
+      fb.className = 'quiz-feedback show correct';
+      STATE.totalQuizCorrect++;
+      showToast('✅ Resposta correta!', 'success');
+    } else {
+      fb.textContent = '❌ ' + q.explanation;
+      fb.className = 'quiz-feedback show wrong';
+      showToast('❌ Não foi dessa vez...', 'warning');
     }
-  }, 100);
-}
+  }
 
-// ── QR MODAL ──
-function showQRInfo(title, desc) {
-  document.getElementById('qr-title').textContent = title;
-  document.getElementById('qr-desc').textContent = desc;
-  const m = document.getElementById('qr-modal');
-  m.style.display = 'flex';
-}
+  var nextBtn = document.getElementById('qnext-' + roomNum);
+  if (nextBtn) nextBtn.style.display = 'inline-block';
 
-function closeQR() {
-  document.getElementById('qr-modal').style.display = 'none';
-}
-
-// ── VOTE ──
-const voteResponses = {
-  valoriza: "Ótima perspectiva! O turismo pode ser uma força poderosa para valorizar e divulgar a identidade cultural de uma cidade, desde que bem gerenciado. Quando turistas vêm conhecer a história do Ipiranga ou a cultura japonesa da Liberdade, eles contribuem para manter essas tradições vivas.",
-  transforma: "Reflexão importante! Sem dúvida, o turismo transforma. Bairros mudam, preços sobem, lojas tradicionais fecham. A questão é: como fazer essa transformação de forma que preserve o essencial da identidade local?",
-  ambos: "Resposta muito completa! O turismo tanto valoriza quanto transforma — e geralmente faz os dois ao mesmo tempo. O desafio é maximizar a valorização e minimizar as transformações negativas através de políticas de turismo sustentável."
+  checkAchievements();
 };
 
-function vote(choice) {
-  document.querySelectorAll('.vote-btn').forEach(b => b.classList.remove('voted'));
-  event.target.classList.add('voted');
-  const r = document.getElementById('vote-result');
-  r.style.display = 'block';
-  r.textContent = '💭 ' + voteResponses[choice];
+// ═══════════════════════════════════════
+// QR CODE MODAL (FUNÇÃO GLOBAL)
+// ═══════════════════════════════════════
+window.showQRInfo = function(title, desc) {
+  var qrTitle = document.getElementById('qr-title');
+  var qrDesc = document.getElementById('qr-desc');
+  var modal = document.getElementById('qr-modal');
+
+  if (qrTitle) qrTitle.textContent = title;
+  if (qrDesc) qrDesc.textContent = desc;
+  if (modal) {
+    modal.style.display = 'flex';
+    modal.style.animation = 'roomFadeIn 0.3s ease';
+  }
+};
+
+window.closeQR = function() {
+  var modal = document.getElementById('qr-modal');
+  if (modal) modal.style.display = 'none';
+};
+
+// ═══════════════════════════════════════
+// VOTAÇÃO (FUNÇÃO GLOBAL)
+// ═══════════════════════════════════════
+window.castVote = function(choice) {
+  if (STATE.voteSubmitted) return;
+  STATE.voteSubmitted = true;
+
+  var responses = {
+    valoriza: '✨ O turismo pode <strong>valorizar</strong> a identidade cultural quando bem gerenciado.',
+    transforma: '🔄 O turismo <strong>transforma</strong> bairros e modos de vida. O desafio é preservar o essencial.',
+    ambos: '⚖ O turismo <strong>valoriza e transforma</strong> ao mesmo tempo. O equilíbrio é fundamental.',
+  };
+
+  document.querySelectorAll('.vote-btn').forEach(function(b) {
+    b.style.pointerEvents = 'none';
+    b.classList.remove('voted');
+  });
+
+  var clicked = document.querySelector('.vote-btn.' + choice);
+  if (clicked) clicked.classList.add('voted');
+
+  var vr = document.getElementById('vote-result');
+  if (vr) {
+    vr.style.display = 'block';
+    vr.innerHTML = '💭 ' + responses[choice];
+  }
+
+  showToast('🗳️ Obrigado por votar!', 'success');
+  checkAchievements();
+};
+
+// ═══════════════════════════════════════
+// MENU MOBILE (FUNÇÃO GLOBAL)
+// ═══════════════════════════════════════
+window.toggleMobileNav = function() {
+  var mn = document.getElementById('mobileNavMenu');
+  if (mn) mn.classList.toggle('open');
+};
+
+window.closeMobileNav = function() {
+  var mn = document.getElementById('mobileNavMenu');
+  if (mn) mn.classList.remove('open');
+};
+
+// ═══════════════════════════════════════
+// SCROLL HANDLER
+// ═══════════════════════════════════════
+window.addEventListener('scroll', function() {
+  var bt = document.getElementById('back-to-top');
+  if (bt) {
+    if (window.scrollY > CONFIG.scrollThreshold) {
+      bt.style.display = 'block';
+    } else {
+      bt.style.display = 'none';
+    }
+  }
+
+  var header = document.getElementById('museumHeader');
+  if (header) {
+    if (window.scrollY > 50) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+  }
+}, { passive: true });
+
+// ═══════════════════════════════════════
+// FECHAR QR MODAL AO CLICAR FORA
+// ═══════════════════════════════════════
+var qrModal = document.getElementById('qr-modal');
+if (qrModal) {
+  qrModal.addEventListener('click', function(e) {
+    if (e.target === qrModal) window.closeQR();
+  });
 }
 
-// ── CLOSE QR on backdrop ──
-document.getElementById('qr-modal').addEventListener('click', function(e) {
-  if (e.target === this) closeQR();
+// ═══════════════════════════════════════
+// KEYBOARD NAVIGATION
+// ═══════════════════════════════════════
+document.addEventListener('keydown', function(e) {
+  if (!STATE.museumEntered) return;
+
+  switch(e.key) {
+    case 'ArrowRight':
+      e.preventDefault();
+      if (STATE.currentRoom < CONFIG.totalRooms) window.goRoom(STATE.currentRoom + 1);
+      break;
+    case 'ArrowLeft':
+      e.preventDefault();
+      if (STATE.currentRoom > 1) window.goRoom(STATE.currentRoom - 1);
+      break;
+    case 'Escape':
+      e.preventDefault();
+      window.closeQR();
+      window.closeAchievement();
+      window.closeMobileNav();
+      break;
+    case '1': case '2': case '3': case '4': case '5': case '6':
+      e.preventDefault();
+      window.goRoom(parseInt(e.key));
+      break;
+  }
 });
 
-// Init
-buildQuiz(1);
+// ═══════════════════════════════════════
+// INICIALIZAÇÃO
+// ═══════════════════════════════════════
+function init() {
+  console.log('🏛️ Inicializando Museu Virtual de São Paulo...');
+
+  // Splash screen
+  var splashLoader = document.getElementById('splashLoaderBar');
+  if (splashLoader) {
+    setTimeout(function() { splashLoader.classList.add('loaded'); }, 300);
+  }
+
+  var splash = document.getElementById('splash-screen');
+  if (splash) {
+    setTimeout(function() {
+      splash.classList.add('hidden');
+      setTimeout(function() {
+        splash.style.display = 'none';
+      }, 800);
+    }, CONFIG.splashDuration);
+  }
+
+  // Inicializar componentes
+  initCursor();
+  createBackgroundParticles();
+  buildTimeline();
+  buildQuiz(1);
+  createHeroParticles(1);
+
+  console.log('✅ Museu Virtual inicializado!');
+  console.log('🏆 ' + Object.keys(ACHIEVEMENTS).length + ' conquistas disponíveis.');
+  console.log('⌨️ Use setas ← → para navegar. Teclas 1-6 para salas.');
+}
+
+// ═══════════════════════════════════════
+// INICIAR QUANDO O DOM ESTIVER PRONTO
+// ═══════════════════════════════════════
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+
 </script>
 </body>
 </html>
