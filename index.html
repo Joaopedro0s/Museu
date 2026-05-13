@@ -2730,7 +2730,16 @@ body {
         por ano. Cada ponto turístico conta uma parte da história e da identidade paulistana. 
         Use o mapa interativo abaixo para descobrir cada local!
       </p>
-
+      <div class="audio-player" onclick="toggleAudio(this, 'sala2')" id="audioPlayer2">
+      <button class="audio-play-btn">▶</button>
+      <div class="audio-info">
+        <h4>🎙 Narração Imersiva: O Turismo em São Paulo</h4>
+        <p>Descubra os principais atrativos e a força turística da metrópole</p>
+      </div>
+      <div class="audio-bar">
+        <div class="audio-progress" id="audioProgress2" style="width: 0%"></div>
+      </div>
+    </div>
       <!-- Mapa Interativo -->
       <div class="map-container">
         <div class="map-title">🗺 Mapa Interativo — Clique nos Pontos</div>
@@ -2836,7 +2845,17 @@ body {
         cultural singular. <strong style="color:var(--gold);">Clique nos cartões</strong> 
         para explorar cada elemento!
       </p>
-
+      <!-- Audio Player -->
+      <div class="audio-player" onclick="toggleAudio(this, 'sala3')" id="audioPlayer3">
+        <button class="audio-play-btn">▶</button>
+        <div class="audio-info">
+          <h4>🎙 Narração Imersiva: A Cultura Paulistana</h4>
+          <p>Explore a rica diversidade cultural, museus e a arte da cidade</p>
+        </div>
+        <div class="audio-bar">
+          <div class="audio-progress" id="audioProgress3" style="width: 0%"></div>
+        </div>
+      </div>
       <!-- Culture Cards -->
       <div class="culture-grid">
         <div class="culture-card" onclick="toggleCulture(this)">
@@ -3023,7 +3042,17 @@ body {
           <p>Reconhecer os impactos é o <strong>primeiro passo</strong>. A Sala 6 apresenta soluções concretas para um turismo mais sustentável em São Paulo. Continue explorando o museu para descobrir como equilibrar turismo e preservação!</p>
         </div>
       </div>
-
+      <!-- Audio Player -->
+      <div class="audio-player" onclick="toggleAudio(this, 'sala4')" id="audioPlayer4">
+        <button class="audio-play-btn">▶</button>
+        <div class="audio-info">
+          <h4>🎙 Narração Imersiva: Impactos Ambientais</h4>
+          <p>Entenda as consequências ecológicas geradas pelo turismo na capital</p>
+        </div>
+        <div class="audio-bar">
+          <div class="audio-progress" id="audioProgress4" style="width: 0%"></div>
+        </div>
+      </div>
       <div id="quiz-room4"></div>
 
       <div class="room-nav-footer">
@@ -3096,7 +3125,17 @@ body {
           <p>Com o turismo intenso, aluguéis, alimentação e serviços sobem nos bairros turísticos. Moradores de baixa renda são os mais afetados, muitas vezes precisando abandonar bairros onde viveram por gerações.</p>
         </div>
       </div>
-
+      <!-- Audio Player -->
+      <div class="audio-player" onclick="toggleAudio(this, 'sala5')" id="audioPlayer5">
+        <button class="audio-play-btn">▶</button>
+        <div class="audio-info">
+          <h4>🎙 Narração Imersiva: Desafios do Turismo</h4>
+          <p>Reflexões sobre mobilidade, superlotação e outros desafios urbanos</p>
+        </div>
+        <div class="audio-bar">
+          <div class="audio-progress" id="audioProgress5" style="width: 0%"></div>
+        </div>
+      </div>
       <!-- Estudo de Caso -->
       <div style="background:rgba(139,69,19,0.1); border:1px solid rgba(139,69,19,0.25); border-radius:10px; padding:2.5rem; margin:2.5rem 0;">
         <div class="section-label">ESTUDO DE CASO</div>
@@ -3930,66 +3969,76 @@ window.selectTrad = function(btn, response) {
 // ═══════════════════════════════════════
 // ÁUDIO (FUNÇÃO GLOBAL)
 // ═══════════════════════════════════════
-// Objeto para não dar conflito entre os áudios
-const audioInstancias = {};
-const intervalos = {};
+// Controle global de áudio
+const audioContext = {
+    instances: {},
+    intervals: {}
+};
 
-window.toggleAudio = function(elemento, audioId) {
-    const botao = elemento.querySelector('.audio-play-btn');
-    const barra = elemento.querySelector('.audio-progress');
+window.toggleAudio = function(playerElement, audioId) {
+    const btn = playerElement.querySelector('.audio-play-btn');
+    const bar = playerElement.querySelector('.audio-progress');
     
-    // Se o audioId for 'sala1', o arquivo SERÁ 'sala 1.ogg'
-    // Se o audioId for 'audio6', o arquivo SERÁ 'sala 6.ogg'
-    // Ajuste aqui para bater com seus arquivos:
-    let nomeArquivo = "";
-    if(audioId === 'sala1') nomeArquivo = "sala 1.ogg";
-    else if(audioId === 'audio6') nomeArquivo = "sala 6.ogg";
-    else nomeArquivo = audioId + ".ogg"; // Fallback
+    // REGEX MÁGICA: Extrai apenas os números do ID (ex: 'sala1' vira '1')
+    const number = audioId.match(/\d+/);
+    if (!number) {
+        console.error("ID de áudio inválido. Use algo como 'sala1' ou 'audio6'");
+        return;
+    }
+    
+    // Monta o nome do arquivo exatamente como você confirmou
+    const fileName = "sala " + number[0] + ".ogg";
 
-    // Se não existir a instância, cria
-    if (!audioInstancias[audioId]) {
-        audioInstancias[audioId] = new Audio(nomeArquivo);
+    // Cria a instância se não existir
+    if (!audioContext.instances[audioId]) {
+        audioContext.instances[audioId] = new Audio(fileName);
     }
 
-    const som = audioInstancias[audioId];
+    const audio = audioContext.instances[audioId];
 
-    if (elemento.classList.contains('playing')) {
-        // PAUSAR
-        som.pause();
-        elemento.classList.remove('playing');
-        if (botao) botao.textContent = '▶';
-        clearInterval(intervalos[audioId]);
+    if (playerElement.classList.contains('playing')) {
+        // --- AÇÃO: PAUSAR ---
+        audio.pause();
+        playerElement.classList.remove('playing');
+        if (btn) btn.textContent = '▶';
+        clearInterval(audioContext.intervals[audioId]);
     } else {
-        // TOCAR
-        // Pausa qualquer outro que esteja tocando
-        Object.keys(audioInstancias).forEach(id => {
-            audioInstancias[id].pause();
-            clearInterval(intervalos[id]);
-            // Reseta visualmente todos os players da tela
-            document.querySelectorAll('.audio-player').forEach(p => {
-                p.classList.remove('playing');
-                const b = p.querySelector('.audio-play-btn');
-                if (b) b.textContent = '▶';
-            });
-        });
-
-        elemento.classList.add('playing');
-        if (botao) botao.textContent = '⏸';
+        // --- AÇÃO: TOCAR ---
         
-        som.play().catch(err => {
-            alert("ERRO CRÍTICO: O arquivo '" + nomeArquivo + "' não foi encontrado na pasta!");
+        // 1. Pausa TODOS os outros áudios e reseta os botões da página
+        Object.keys(audioContext.instances).forEach(id => {
+            audioContext.instances[id].pause();
+            clearInterval(audioContext.intervals[id]);
+        });
+        
+        document.querySelectorAll('.audio-player').forEach(p => {
+            p.classList.remove('playing');
+            const b = p.querySelector('.audio-play-btn');
+            if (b) b.textContent = '▶';
         });
 
-        intervalos[audioId] = setInterval(() => {
-            if (som.duration) {
-                const pct = (som.currentTime / som.duration) * 100;
-                if (barra) barra.style.width = pct + '%';
+        // 2. Inicia o áudio atual
+        playerElement.classList.add('playing');
+        if (btn) btn.textContent = '⏸';
+        
+        audio.play().catch(err => {
+            console.error("Erro ao carregar:", fileName);
+            alert("Não encontrado: " + fileName + "\nVerifique se o arquivo está na pasta raiz.");
+        });
+
+        // 3. Atualiza a barra de progresso em tempo real
+        audioContext.intervals[audioId] = setInterval(() => {
+            if (audio.duration) {
+                const pct = (audio.currentTime / audio.duration) * 100;
+                if (bar) bar.style.width = pct + '%';
             }
-            if (som.ended) {
-                clearInterval(intervalos[audioId]);
-                elemento.classList.remove('playing');
-                if (botao) botao.textContent = '▶';
-                if (barra) barra.style.width = '0%';
+            
+            if (audio.ended) {
+                clearInterval(audioContext.intervals[audioId]);
+                playerElement.classList.remove('playing');
+                if (btn) btn.textContent = '▶';
+                if (bar) bar.style.width = '0%';
+                audio.currentTime = 0;
             }
         }, 100);
     }
