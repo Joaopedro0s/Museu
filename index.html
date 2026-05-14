@@ -2707,119 +2707,73 @@ body {
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════
-       SALA 2 – PONTOS TURÍSTICOS
-       ═══════════════════════════════════════ -->
   <div id="room-2" class="room room-2">
     <div class="room-hero">
-      <div class="room-hero-bg"></div>
-      <div class="room-hero-particles" id="heroParticles2"></div>
-      <div class="room-deco">📍</div>
-      <div class="room-hero-content">
-        <div class="room-number">SALA 02 / 06</div>
-        <h2 class="room-title">Pontos <span>Turísticos</span></h2>
-      </div>
+        <div class="room-hero-bg"></div>
+        <div class="room-hero-particles" id="heroParticles2"></div>
+        <div class="room-deco">📍</div>
+        <div class="room-hero-content">
+            <div class="room-number">SALA 02 / 06</div>
+            <h2 class="room-title">Pontos <span>Turísticos</span></h2>
+        </div>
     </div>
-    
+
     <div class="room-content fade-in">
-      <div class="section-label">LUGARES ICÔNICOS</div>
-      <h3 class="section-heading">Explore o Mapa de São Paulo</h3>
-      <div class="divider"></div>
-      <p class="lead-text">
-        São Paulo recebe <strong style="color:var(--gold);">mais de 15 milhões de turistas</strong> 
-        por ano. Cada ponto turístico conta uma parte da história e da identidade paulistana. 
-        Use o mapa interativo abaixo para descobrir cada local!
-      </p>
-      <div class="audio-player" onclick="toggleAudio(this, 'sala2')" id="audioPlayer2">
-      <button class="audio-play-btn">▶</button>
-      <div class="audio-info">
-        <h4>🎙 Narração Imersiva: O Turismo em São Paulo</h4>
-        <p>Descubra os principais atrativos e a força turística da metrópole</p>
-      </div>
-      <div class="audio-bar">
-        <div class="audio-progress" id="audioProgress2" style="width: 0%"></div>
-      </div>
+        <div class="section-label">LUGARES ICÔNICOS</div>
+        <h3 class="section-heading">Explore o Mapa de São Paulo</h3>
+        <div class="divider"></div>
+        <p class="lead-text">
+            São Paulo recebe <strong style="color:var(--gold);">mais de 15 milhões de turistas</strong> 
+            por ano. Cada ponto turístico conta uma parte da história e da identidade paulistana. 
+            Use o mapa abaixo para localizar ícones como o <strong>MASP, o Ibirapuera e o Centro Histórico</strong>.
+        </p>
+
+        <div class="map-container" style="margin: 2rem 0; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid rgba(255,215,0,0.3);">
+            <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d14628.981615652614!2d-46.662365!3d-23.559616!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1spontos%20turisticos!5e0!3m2!1spt-BR!2sbr!4v1715632000000!5m2!1spt-BR!2sbr" 
+                width="100%" 
+                height="500" 
+                style="border:0; display: block;" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+        </div>
+
+        <div class="audio-player" onclick="toggleAudio(this, 'sala2')" id="audioPlayer2">
+            <button class="audio-play-btn">▶</button>
+            <div class="audio-info">
+                <h4>🎙 Narração Imersiva: O Turismo em São Paulo</h4>
+                <p>Descubra os principais atrativos e a força turística da metrópole</p>
+            </div>
+            <div class="audio-bar">
+                <div class="audio-progress" id="audioProgress2" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="section-grid">
+            <div class="info-card">
+                <h3>🌍 Turismo Internacional</h3>
+                <p>A capital paulista é a principal porta de entrada do Brasil. Os pontos históricos e culturais atraem visitantes de todo o mundo.</p>
+            </div>
+            <div class="info-card">
+                <h3>🏛 Memória Coletiva</h3>
+                <p>Edifícios como o Copan e a Estação da Luz preservam séculos de evolução urbana, conectando o passado ao presente.</p>
+            </div>
+            <div class="info-card">
+                <h3>💰 Economia Local</h3>
+                <p>O turismo gera <strong>milhões de empregos</strong>. Preservar o patrimônio é garantir o sustento de quem dá vida à cidade.</p>
+            </div>
+        </div>
+
+        <div id="quiz-room2"></div>
+
+        <div class="room-nav-footer">
+            <button class="nav-arrow prev" onclick="goRoom(1)">← Sala 1: História</button>
+            <button class="nav-arrow next" onclick="goRoom(3)">Próxima Sala: Cultura →</button>
+        </div>
     </div>
-      <!-- Mapa Interativo -->
-      <div class="map-container">
-        <div class="map-title">🗺 Mapa Interativo — Clique nos Pontos</div>
-        <div class="map-svg-wrap">
-          <svg viewBox="0 0 700 450" xmlns="http://www.w3.org/2000/svg">
-            <rect width="700" height="450" fill="#0D1520" rx="10"/>
-            <g stroke="#152535" stroke-width="1.5" fill="none">
-              <line x1="0" y1="120" x2="700" y2="120"/><line x1="0" y1="230" x2="700" y2="230"/>
-              <line x1="0" y1="340" x2="700" y2="340"/><line x1="120" y1="0" x2="120" y2="450"/>
-              <line x1="240" y1="0" x2="240" y2="450"/><line x1="360" y1="0" x2="360" y2="450"/>
-              <line x1="480" y1="0" x2="480" y2="450"/><line x1="600" y1="0" x2="600" y2="450"/>
-            </g>
-            <g stroke="#1C3045" stroke-width="2.5" fill="none">
-              <line x1="60" y1="0" x2="480" y2="420"/><line x1="0" y1="180" x2="700" y2="60"/>
-              <line x1="180" y1="450" x2="700" y2="120"/><line x1="0" y1="300" x2="550" y2="450"/>
-            </g>
-            <ellipse cx="420" cy="310" rx="80" ry="55" fill="#0D2A1A" stroke="#1A4D33" stroke-width="1.5"/>
-            <text x="420" y="315" text-anchor="middle" fill="#2E7D52" font-size="9" font-family="DM Sans">Parque</text>
-            <text x="420" y="328" text-anchor="middle" fill="#2E7D52" font-size="9" font-family="DM Sans">Ibirapuera</text>
-            <rect x="100" y="330" width="90" height="65" fill="#0D1F3C" rx="5" stroke="#1A3A5C" stroke-width="1"/>
-            <text x="145" y="365" text-anchor="middle" fill="#3A6090" font-size="9" font-family="DM Sans">Bairro do</text>
-            <text x="145" y="378" text-anchor="middle" fill="#3A6090" font-size="9" font-family="DM Sans">Ipiranga</text>
-            <text x="350" y="18" fill="#C9A84C" font-size="10" font-family="DM Sans" opacity="0.7">CENTRO HISTÓRICO</text>
-
-            <!-- Pontos do mapa -->
-            <g class="map-point" onclick="showMapInfo(1)" transform="translate(145, 348)">
-              <circle r="12" cx="0" cy="0"/><text x="0" y="5" text-anchor="middle" fill="#0D0D0D" font-size="10" font-weight="bold" font-family="DM Sans">1</text>
-            </g>
-            <g class="map-point" onclick="showMapInfo(2)" transform="translate(180, 310)">
-              <circle r="12" cx="0" cy="0"/><text x="0" y="5" text-anchor="middle" fill="#0D0D0D" font-size="10" font-weight="bold" font-family="DM Sans">2</text>
-            </g>
-            <g class="map-point" onclick="showMapInfo(3)" transform="translate(350, 225)">
-              <circle r="12" cx="0" cy="0"/><text x="0" y="5" text-anchor="middle" fill="#0D0D0D" font-size="10" font-weight="bold" font-family="DM Sans">3</text>
-            </g>
-            <g class="map-point" onclick="showMapInfo(4)" transform="translate(420, 310)">
-              <circle r="12" cx="0" cy="0"/><text x="0" y="5" text-anchor="middle" fill="#0D0D0D" font-size="10" font-weight="bold" font-family="DM Sans">4</text>
-            </g>
-            <g class="map-point" onclick="showMapInfo(5)" transform="translate(300, 265)">
-              <circle r="12" cx="0" cy="0"/><text x="0" y="5" text-anchor="middle" fill="#0D0D0D" font-size="10" font-weight="bold" font-family="DM Sans">5</text>
-            </g>
-          </svg>
-        </div>
-
-        <div class="map-info" id="map-info-box">
-          <h4>👆 Clique em um ponto numerado no mapa</h4>
-          <p>Selecione qualquer um dos 5 pontos turísticos destacados para ver informações detalhadas sobre cada local histórico e cultural.</p>
-        </div>
-
-        <div class="map-legend">
-          <div class="legend-item" onclick="showMapInfo(1)"><div class="legend-dot"></div>1. Museu do Ipiranga</div>
-          <div class="legend-item" onclick="showMapInfo(2)"><div class="legend-dot"></div>2. Monumento à Independência</div>
-          <div class="legend-item" onclick="showMapInfo(3)"><div class="legend-dot"></div>3. Catedral da Sé</div>
-          <div class="legend-item" onclick="showMapInfo(4)"><div class="legend-dot"></div>4. Parque Ibirapuera</div>
-          <div class="legend-item" onclick="showMapInfo(5)"><div class="legend-dot"></div>5. Bairro da Liberdade</div>
-        </div>
-      </div>
-
-      <div class="section-grid">
-        <div class="info-card">
-          <h3>🌍 Turismo Internacional</h3>
-          <p>São Paulo recebe mais de <strong>15 milhões de turistas</strong> por ano. Os pontos históricos são o principal atrativo para visitantes de todo o mundo que buscam conhecer a cultura e identidade brasileira.</p>
-        </div>
-        <div class="info-card">
-          <h3>🏛 Memória Coletiva</h3>
-          <p>Preservar monumentos e espaços históricos significa manter viva a memória de um povo. Sem esses locais, gerações futuras perderiam o contato com suas raízes e identidade.</p>
-        </div>
-        <div class="info-card">
-          <h3>💰 Economia Local</h3>
-          <p>O turismo gera <strong>milhões de empregos</strong> na cidade: guias turísticos, hotéis, restaurantes, artesãos e comércio local. Preservar os atrativos culturais é também sustentar a economia.</p>
-        </div>
-      </div>
-
-      <div id="quiz-room2"></div>
-
-      <div class="room-nav-footer">
-        <button class="nav-arrow prev" onclick="goRoom(1)">← Sala 1: História</button>
-        <button class="nav-arrow next" onclick="goRoom(3)">Próxima Sala: Cultura →</button>
-      </div>
-    </div>
-  </div>
+</div>
 
   <!-- ═══════════════════════════════════════
        SALA 3 – CULTURA E TRADIÇÕES
